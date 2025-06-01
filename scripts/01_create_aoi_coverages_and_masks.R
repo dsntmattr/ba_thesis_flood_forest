@@ -16,20 +16,19 @@ library(gdalcubes) # for raster cubes
 floodplains <- st_read("data/raw/floodplains/FLUT_LK.shp")
 floodplains <- st_transform(floodplains, crs = 25832)
 floodplains <-st_union(floodplains)
-floodplains <-st_sf(floodplains) # ???
+floodplains <-st_sf(floodplains)
 
 ## Read the forest areas
-forest <- st_read("data/raw/clc12_5ha_st_forest_types/clc12_forest_types_st.shp")
-forest <- st_transform(forest, crs = 25832)
-## Dissolving forest dataset to each Code_12 class.
+forest <- st_read("data/raw/dlm_st_veg/veg02_f.shp")
+## Dissolving forest dataset to each VEG class.
 forest <- forest %>%
-  group_by(Code_12) %>%
+  group_by(VEG) %>%
   summarise(geometry = st_union(geometry)) ## Creates a new column "geometry" where all former geometries are unionized.
 
 ## Intersect floodplains and forest
 flood_forest <- st_intersection(floodplains, forest)
 
-st_write(flood_forest, "data/work/clc12_5ha/flood_forest.shp")
+st_write(flood_forest, "data/work/flood_forest.shp")
 
 # 2.0 Base grid ####
 # Get a base grid which covers the whole study area, to use it later as template for the masks
@@ -40,7 +39,7 @@ rm(list=ls())
 s.obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
 
 #load aoi shapefile to get bounding box
-sf <-st_read ("data/work/clc12_5ha/flood_forest.shp")
+sf <-st_read ("data/work/flood_forest.shp")
 sf <- st_transform(sf, crs =4326)
 bbox <- st_bbox(sf)
 bbox.vector <- as.vector(bbox)
@@ -88,6 +87,7 @@ v     = cube_view(srs = wkt2,  extent = list(t0 = substr(toi, 1, 10), t1 = subst
 
 
 cube = raster_cube(collection, v)
+cube
 
 #get the acquisition date
 img.dates <- NULL
@@ -97,7 +97,7 @@ for (i in 1:length(it.obj$features)) {
 img.dates <- rev(unique(img.dates))
 
 write_tif(select_time(raster_cube(collection, v),img.dates),
-          dir="data/work/clc12_5ha",
+          dir="data/work",
           prefix='MODIS_')
 
 
@@ -108,7 +108,7 @@ write_tif(select_time(raster_cube(collection, v),img.dates),
 rm(list=ls())
 
 ## Reading the MODIS scene
-r <- rast("data/work/clc12_5ha/MODIS_2013-05-01.tif")
+r <- rast("work/MODIS_2013-05-01.tif")
 
 ## Set the CRS of the MODIS scene. Watch out, we don't project or transform the CRS.
 ## We just tell the data, which CRS it has.
@@ -130,7 +130,7 @@ r.sf <- st_as_sf(r.sf)
 r.sf <- rename(r.sf, id_mask = Nadir_Reflectance_Band1)
 
 ## Now we need the flooded forests to overlap them with our vectorized raster layer.
-sf <- st_read("data/work/clc12_5ha/flood_forest.shp")
+sf <- st_read("data/work/flood_forest.shp")
 
 ## Transform the CRS of the forest layer to the CRS of our MODIS scene.
 sf <- st_transform(sf, crs(r))
@@ -152,12 +152,9 @@ crop.box <- as.polygons(crop.box, crs=crs(r))
 sf <- st_crop(sf,crop.box)
 
 ## Get one polygon for each forest type with unionized features.
-# 311 - Broad
-# 312 - Conifer
-# 313 - Mixed
-for_bro <- sf %>% filter(Code_12 == "311")
-for_con <- sf %>% filter(Code_12 == "312")
-for_mix <- sf %>% filter(Code_12 == "313")
+for_bro <- sf %>% filter(VEG == "1100")
+for_con <- sf %>% filter(VEG == "1200")
+for_mix <- sf %>% filter(VEG == "1300")
 
 ## Intersect the forest types and the vectorized raster layer.
 for_bro_int <- st_intersection(for_bro, r.sf)
@@ -170,31 +167,27 @@ cov_bro <- rasterize(for_bro_int, r, cover=TRUE)
 cov_con <- rasterize(for_con_int, r, cover=TRUE)
 cov_mix <- rasterize(for_mix_int, r, cover=TRUE)
 
-writeRaster(cov_bro, "data/work/clc12_5ha/cov_bro.tif")
-writeRaster(cov_con, "data/work/clc12_5ha/cov_con.tif")
-writeRaster(cov_mix, "data/work/clc12_5ha/cov_mix.tif")
+#writeRaster(cov_bro, "work/cov_bro.tif")
+#writeRaster(cov_con, "work/cov_con.tif")
+#writeRaster(cov_mix, "work/cov_mix.tif")
 
-# 4.0 Mask layers ####
+
+# 4.0 Mask layers ---------------------------------------------------------
 # Making the final mask layers based on different tresholds.
 
 ## removing all variables from the current environment.
 rm(list=ls())
 
-cov_bro <- rast("data/work/clc12_5ha/cov_bro.tif")
-cov_con <- rast("data/work/clc12_5ha/cov_con.tif")
-cov_mix <- rast("data/work/clc12_5ha/cov_mix.tif")
-
+cov_bro <- rast("data/work/cov_bro.tif")
+cov_con <- rast("data/work/cov_con.tif")
+cov_mix <- rast("data/work/cov_mix.tif")
 cov_all <- c(cov_bro, cov_con, cov_mix)
 
-## Create a multiple reclass matrices to reclassify the raster files.
-## We set different tresholds to get different mask layers to compare the results of the later calculated indice values,
-## based on different forest coverages.
-## All cells with a forest type coverage under the treshold get the value NA, all cells with a forest type coverage above the treshold get the value 1.
+# Reclassifying the coverage layers by different tresholds.
+# Values < treshold = NA
+# Values > treshold = 1
 
-# create the function
-
-testdata <- c(cov_bro, cov_con, cov_mix)
-
+# Create the function
 create_mask = function(data, treshold) {
   m <- c(0, treshold, NA,
          treshold, 1, 1)
@@ -207,57 +200,17 @@ create_mask = function(data, treshold) {
 }
 
 
+mask_30p <- create_mask(cov_all, 0.3)
+mask_50p <- create_mask(cov_all, 0.5)
+mask_70p <- create_mask(cov_all, 0.7)
+mask_90p <- create_mask(cov_all, 0.9)
+mask_99p <- create_mask(cov_all, 0.99)
 
+writeRaster(mask_30p, "data/work/mask_30p.tif")
+writeRaster(mask_50p, "data/work/mask_50p.tif")
+writeRaster(mask_70p, "data/work/mask_70p.tif")
+writeRaster(mask_90p, "data/work/mask_90p.tif")
+writeRaster(mask_99p, "data/work/mask_99p.tif")
 
-## Mask 1: treshold = 0.3 (30%)
-writeRaster(mask_30p, "data/work/clc12_5ha/mask_30p.tif")
-
-## Mask 2: treshold = 0.5 (50%)
-m <- c(0, 0.5, NA,
-       0.5, 1, 1)
-rclmat_50 <- matrix(m, ncol=3, byrow=TRUE)
-
-mask_bro_50 <- classify(cov_bro, rclmat_50)
-mask_con_50 <- classify(cov_con, rclmat_50)
-mask_mix_50 <- classify(cov_mix, rclmat_50)
-
-mask_50p <- c(mask_bro_50, mask_con_50, mask_mix_50)
-writeRaster(mask_50p, "data/work/clc12_5ha/mask_50p.tif")
-
-## Mask 3: treshold = 0.7 (70%)
-m <- c(0, 0.7, NA,
-       0.7, 1, 1)
-rclmat_70 <- matrix(m, ncol=3, byrow=TRUE)
-
-mask_bro_70 <- classify(cov_bro, rclmat_70)
-mask_con_70 <- classify(cov_con, rclmat_70)
-mask_mix_70 <- classify(cov_mix, rclmat_70)
-
-mask_70p <- c(mask_bro_70, mask_con_70, mask_mix_70)
-writeRaster(mask_70p, "data/work/clc12_5ha/mask_70p.tif")
-
-## Mask 4: treshold = 0.9 (90%)
-m <- c(0, 0.9, NA,
-       0.9, 1, 1)
-rclmat_90 <- matrix(m, ncol=3, byrow=TRUE)
-
-mask_bro_90 <- classify(cov_bro, rclmat_90)
-mask_con_90 <- classify(cov_con, rclmat_90)
-mask_mix_90 <- classify(cov_mix, rclmat_90)
-
-mask_90p <- c(mask_bro_90, mask_con_90, mask_mix_90)
-writeRaster(mask_90p, "data/work/clc12_5ha/mask_90p.tif")
-
-## Mask 5: treshold = 0.99 (99%)
-m <- c(0, 0.99, NA,
-       0.99, 1, 1)
-rclmat_99 <- matrix(m, ncol=3, byrow=TRUE)
-
-mask_bro_99 <- classify(cov_bro, rclmat_99)
-mask_con_99 <- classify(cov_con, rclmat_99)
-mask_mix_99 <- classify(cov_mix, rclmat_99)
-
-mask_99p <- c(mask_bro_99, mask_con_99, mask_mix_99)
-writeRaster(mask_99p, "data/work/clc12_5ha/mask_99p.tif")
 
 
