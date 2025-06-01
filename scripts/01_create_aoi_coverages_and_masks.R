@@ -1,4 +1,4 @@
-# 0.0 Packages ####
+# 00 Packages ---------------------------------------------------------
 library(sf) # for vector data
 library(tidyverse) # for tables and other stuff
 library(magrittr) # for %>%
@@ -7,28 +7,22 @@ library(rstac) # for data access
 library(magrittr) # for %>%
 library(gdalcubes) # for raster cubes
 
-# 1.0 Flooded forests ####
-# Intersection the raw datasets floodplains ("FLUT_LK.shp) and forest area types (DLM veg02_f.shp; VEG == 1100, 1200, 1300)
+# 01 Flooded forests ---------------------------------------------------------
+# Intersect floodplains and forest areas
 
-# Read the floodplains
-# Transform its CRS to EPSG:25832 (ETRS89:UTM32N)
-# Dissolve internal borders between the polygon (the raw data is devides by provinces(Landkreise))
-floodplains <- st_read("data/raw/floodplains/FLUT_LK.shp")
-floodplains <- st_transform(floodplains, crs = 25832)
-floodplains <-st_union(floodplains)
-floodplains <-st_sf(floodplains)
+floodplains <- st_read("data/raw/floodplains/FLUT_LK.shp")  # read
+floodplains <- st_transform(floodplains, crs = 25832)       # transform to EPSG:25832 (ETRS89:UTM32N)
+floodplains <- st_union(floodplains)                        # dissolve internal boundaries (output: sfc-object)
+floodplains <- st_sf(floodplains)                           # make floodplains a sf-object again
 
-## Read the forest areas
-forest <- st_read("data/raw/dlm_st_veg/veg02_f.shp")
-## Dissolving forest dataset to each VEG class.
+forest <- st_read("data/raw/dlm_st_veg/veg02_f.shp")        # read
 forest <- forest %>%
-  group_by(VEG) %>%
-  summarise(geometry = st_union(geometry)) ## Creates a new column "geometry" where all former geometries are unionized.
+  group_by(VEG) %>%                                         # group by values in column "VEG"
+  summarise(geometry = st_union(geometry))                  # create a new column "geometry" to union
 
-## Intersect floodplains and forest
-flood_forest <- st_intersection(floodplains, forest)
+flood_forest <- st_intersection(floodplains, forest)        # intersect
 
-st_write(flood_forest, "data/work/flood_forest.shp")
+st_write(flood_forest, "data/work/flood_forest.shp")        # save
 
 # 2.0 Base grid ####
 # Get a base grid which covers the whole study area, to use it later as template for the masks
@@ -134,12 +128,6 @@ sf <- st_read("data/work/flood_forest.shp")
 
 ## Transform the CRS of the forest layer to the CRS of our MODIS scene.
 sf <- st_transform(sf, crs(r))
-
-## Get the first column of forest dataset (VEG = code which represents the different forest types)
-#sf1 <- sf[1]
-
-# Add a ID column to the forest dataset.
-#sf$ID_sf <- 1:nrow(sf)
 
 ## Now we want to clip the forest dataset to the size of the modis scene.
 ## Get the MODIS scene extent.
