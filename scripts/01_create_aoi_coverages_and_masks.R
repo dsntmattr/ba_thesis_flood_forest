@@ -15,14 +15,14 @@ floodplains <- st_transform(floodplains, crs = 25832)       # transform to EPSG:
 floodplains <- st_union(floodplains)                        # dissolve internal boundaries (output: sfc-object)
 floodplains <- st_sf(floodplains)                           # make floodplains a sf-object again
 
-forest <- st_read("data/raw/dlm_st_veg/veg02_f.shp")        # read
+forest <- st_read("data/raw/dlm_st_veg02_f/veg02_f.shp")        # read
 forest <- forest %>%
-  group_by(VEG) %>%                                         # group by values in column "VEG"
-  summarise(geometry = st_union(geometry))                  # create a new column "geometry" to union
+  group_by(VEG) %>%                                             # group by values in column "VEG"
+  summarise(geometry = st_union(geometry))                      # create a new column "geometry" to union
 
-flood_forest <- st_intersection(floodplains, forest)        # intersect
+flood_forest <- st_intersection(floodplains, forest)            # intersect
 
-st_write(flood_forest, "data/work/flood_forest.shp")        # save
+st_write(flood_forest, "data/work/flood_forest.shp")            # save
 
 # 02 Base grid ---------------------------------------------------------
 # Create a base grid which covers the whole study area as "template" for the masks.
@@ -106,82 +106,58 @@ write_tif(select_time(raster_cube(collection, v),img.dates),
           dir="data/work",
           prefix='MODIS_BASEGRID_')
 
+# 03 Coverage ---------------------------------------------------------
+# Get coverage layers (cell values = coverage by forest type in percent)
 
-# 3.0 Coverage layers ####
-# Get 3 raster layers whose cell values represent the cellsm covergages by the different forest typen as a value betwenn 0 and 1.
-
-## removing all variables from the current environment.
+# Removing all variables from the current environment.
 rm(list=ls())
 
-## Reading the MODIS scene
-r <- rast("work/MODIS_BASEGRID_2013-05-01.tif")
+r <- rast("data/work/MODIS_BASEGRID_2013-05-01.tif") # read base grid
 
-## Set the CRS of the MODIS scene. Watch out, we don't project or transform the CRS.
-## We just tell the data, which CRS it has.
+# Set the CRS of the base grid (no project/transform, only "tell" the CRS)
 crs(r) <- ("PROJCS[\"unnamed\",GEOGCS[\"Unknown datum based upon the custom spheroid\",DATUM[\"Not specified (based on custom spheroid)\",SPHEROID[\"Custom spheroid\",6371007.181,0]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Sinusoidal\"],PARAMETER[\"longitude_of_center\",0],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"Meter\",1],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]")
 
-## Changing the cell values from the orignal values (reflectances) to integer numbers, 
-## so each cell gets one particular integer value (like an unique ID)
-## This step is important at this point, because the origial reflectance values of neighbouring cells could be too close to each other,
-## which could lead to mistakes in the polygonizing process.
-r <- setValues(r, 1:(ncell(r)))
+# Vectorize the base grid.
+r <- setValues(r, 1:(ncell(r)))                         # set cell values to integer numbers (prevent merging cells if reflectance values are to close)
+r.sf <- as.polygons(r)                                  # make base grid to a polygon (each cell becomes a polygon)
+r.sf <- st_as_sf(r.sf)                                  # convert "spatVector"-object (terra) to a sf-object (sf)
+r.sf <- rename(r.sf, id_mask = Nadir_Reflectance_Band1) # rename column
 
-## Convert the MODIS raster to a polygon dataset. Each raster cell becomes a polygon.
-r.sf <- as.polygons(r)
+# Get flooded forest.
+sf <- st_read("data/work/flood_forest.shp")             # load flooded forest
+sf <- st_transform(sf, crs(r))                          # Transform flooded forest CRS to base grid crs
 
-## Convert the polygon with the class "spatVector" (terra package) to a sf-object (sf package)
-r.sf <- st_as_sf(r.sf)
-
-## Rename the column "Nadir_Reflectance_Band1" to "id_mask"
-r.sf <- rename(r.sf, id_mask = Nadir_Reflectance_Band1)
-
-## Now we need the flooded forests to overlap them with our vectorized raster layer.
-sf <- st_read("data/work/flood_forest.shp")
-
-## Transform the CRS of the forest layer to the CRS of our MODIS scene.
-sf <- st_transform(sf, crs(r))
-
-## Now we want to clip the forest dataset to the size of the modis scene.
-## Get the MODIS scene extent.
-crop.box <- ext(r)
-
-## Make a SpatVector from the extent.
-crop.box <- as.polygons(crop.box, crs=crs(r))
-
-## Crop the flooded forest data to the MODIS scene extent.
-sf <- st_crop(sf,crop.box)
+# Clip flooded forest to size of base grid.
+crop.box <- ext(r)                            # Get base grid extent.
+crop.box <- as.polygons(crop.box, crs=crs(r)) # Make a spatVector from the extent.
+sf <- st_crop(sf,crop.box)                    # Crop the flooded forest to base grid extent.
 
 ## Get one polygon for each forest type with unionized features.
 for_bro <- sf %>% filter(VEG == "1100")
 for_con <- sf %>% filter(VEG == "1200")
 for_mix <- sf %>% filter(VEG == "1300")
 
-## Intersect the forest types and the vectorized raster layer.
+# Intersect the forest types and the vectorized raster layer.
 for_bro_int <- st_intersection(for_bro, r.sf)
 for_con_int <- st_intersection(for_con, r.sf)
 for_mix_int <- st_intersection(for_mix, r.sf)
 
-## Get a raster with all cell from modis which are coverd by forest type 
-## and where the cell value = coverage of the cell by forest in percentage (0-1).
+# Make the coverage layers
 cov_bro <- rasterize(for_bro_int, r, cover=TRUE)
 cov_con <- rasterize(for_con_int, r, cover=TRUE)
 cov_mix <- rasterize(for_mix_int, r, cover=TRUE)
 
-#writeRaster(cov_bro, "work/cov_bro.tif")
-#writeRaster(cov_con, "work/cov_con.tif")
-#writeRaster(cov_mix, "work/cov_mix.tif")
+cov_all <- c(cov_bro, cov_con, cov_mix)
 
+writeRaster(cov_all, "data/work/coverage.tif")
 
-# 4.0 Mask layers ---------------------------------------------------------
+# 04 Mask layers ---------------------------------------------------------
 # Making the final mask layers based on different tresholds.
 
 ## removing all variables from the current environment.
-rm(list=ls())
+#rm(list=ls())
 
-cov_bro <- rast("data/work/cov_bro.tif")
-cov_con <- rast("data/work/cov_con.tif")
-cov_mix <- rast("data/work/cov_mix.tif")
-cov_all <- c(cov_bro, cov_con, cov_mix)
+cov_all <- rast("data/work/coverage.tif")
 
 # Reclassifying the coverage layers by different tresholds.
 # Values < treshold = NA
@@ -199,7 +175,6 @@ create_mask = function(data, treshold) {
   return(all_masks)
 }
 
-
 mask_30p <- create_mask(cov_all, 0.3)
 mask_50p <- create_mask(cov_all, 0.5)
 mask_70p <- create_mask(cov_all, 0.7)
@@ -211,6 +186,3 @@ writeRaster(mask_50p, "data/work/mask_50p.tif")
 writeRaster(mask_70p, "data/work/mask_70p.tif")
 writeRaster(mask_90p, "data/work/mask_90p.tif")
 writeRaster(mask_99p, "data/work/mask_99p.tif")
-
-
-
