@@ -24,28 +24,28 @@ flood_forest <- st_intersection(floodplains, forest)        # intersect
 
 st_write(flood_forest, "data/work/flood_forest.shp")        # save
 
-# 2.0 Base grid ####
-# Get a base grid which covers the whole study area, to use it later as template for the masks
-## removing all variables from the current environment.
+# 02 Base grid ---------------------------------------------------------
+# Create a base grid which covers the whole study area as "template" for the masks.
+
+# Removing all variables from the current environment.
 rm(list=ls())
 
-#link to collection
+# Link to collection
 s.obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
 
-#load aoi shapefile to get bounding box
-sf <-st_read ("data/work/flood_forest.shp")
-sf <- st_transform(sf, crs =4326)
-bbox <- st_bbox(sf)
-bbox.vector <- as.vector(bbox)
-save(bbox.vector, file = "data/work/bbox.vector.RData")
+# Get bounding box of AOI
+sf <-st_read ("data/work/flood_forest.shp")               # read
+sf <- st_transform(sf, crs = 4326)                        # transform to EPSG:4326
+bbox <- st_bbox(sf)                                       # get bounding box
+bbox.vector <- as.vector(bbox)                            # get bounding box in numeric vector
+save(bbox.vector, file = "data/work/bbox.vector.RData")   # save bounding box vector as .RData
 
-#set time period of interest
-toi   <- "2013-05-01/2013-05-02"
+# Download the MODIS scenes:
 
-#set area of interest
-aoi   <- bbox.vector
+toi   <- "2013-05-01/2013-05-02" # set time period of interest
+aoi   <- bbox.vector             # set area of interest
 
-#filter collection to find the elements we want containing the coordinates of interest
+# Filter collection to find the elements we want containing the coordinates of interest.
 it.obj <- s.obj %>%
   stac_search(collections = "modis-43A4-061",
               datetime=toi,
@@ -54,45 +54,57 @@ it.obj <- s.obj %>%
   items_sign(sign_fn = sign_planetary_computer())
 it.obj
 
-#get the coordinate system
+# Get the coordinate system.
 wkt2 <- it.obj$features[[1]]$properties$`proj:wkt2`
 
-#define the Bands you want to extract
-assets      <- c("Nadir_Reflectance_Band1")
+# Define the bands to extract:
+assets      <- c("Nadir_Reflectance_Band1")                                 
 collection  <- stac_image_collection(it.obj$features, asset_names = assets)
 
-#define the study area for the cut
+# Define the study area for the cut.
 xmin        <- aoi[1]
 ymin        <- aoi[2]
 xmax        <- aoi[3]
 ymax        <- aoi[4]
-aoi.extent  <- st_bbox(c(xmin = xmin, xmax = xmax,
-                         ymin = ymin, ymax = ymax),
+
+aoi.extent  <- st_bbox(c(xmin = xmin,
+                         xmax = xmax,
+                         ymin = ymin,
+                         ymax = ymax),
                        crs = 4326)
+
 aoi.extent  <- aoi.extent %>% st_as_sfc() %>% st_as_sf()
 
-#project aoi to satellite image projection
+# Project AOI to satellite image projection
 aoi.extent  <- st_bbox(st_transform(st_as_sfc(aoi.extent), wkt2))
 
-#datacube for images at acquisition time  
-v     = cube_view(srs = wkt2,  extent = list(t0 = substr(toi, 1, 10), t1 = substr(toi, 12, 22),
-                                             left = aoi.extent$xmin, right = aoi.extent$xmax,  top = aoi.extent$ymax, bottom = aoi.extent$ymin),
-                  dx = 500, dy = 500, dt="P1D")
-
+# Datacube for images at acquisition time  
+v = cube_view(srs = wkt2,                              # CRS
+              extent = list(t0 = substr(toi, 1, 10),   # start of datetimes
+                            t1 = substr(toi, 12, 22),  # end of datetimes
+                            left = aoi.extent$xmin,    # xmin-value of bounding box
+                            right = aoi.extent$xmax,   # xmax-value of bounding box
+                            top = aoi.extent$ymax,     # ymax-value of bounding box
+                            bottom = aoi.extent$ymin), # ymax-value of bounding box
+              dx = 500, # pixel size in x direction
+              dy = 500, # pixel size in y direction
+              dt="P1D") # timespane to aggregate to one picture
 
 cube = raster_cube(collection, v)
-cube
 
-#get the acquisition date
+# Get the acquisition date
 img.dates <- NULL
+
 for (i in 1:length(it.obj$features)) {
   img.dates <- c(img.dates,substr(it.obj$features[[i]]$properties$datetime, 1, 10))
 }
+
 img.dates <- rev(unique(img.dates))
 
+# Saving
 write_tif(select_time(raster_cube(collection, v),img.dates),
           dir="data/work",
-          prefix='MODIS_')
+          prefix='MODIS_BASEGRID_')
 
 
 # 3.0 Coverage layers ####
@@ -102,7 +114,7 @@ write_tif(select_time(raster_cube(collection, v),img.dates),
 rm(list=ls())
 
 ## Reading the MODIS scene
-r <- rast("work/MODIS_2013-05-01.tif")
+r <- rast("work/MODIS_BASEGRID_2013-05-01.tif")
 
 ## Set the CRS of the MODIS scene. Watch out, we don't project or transform the CRS.
 ## We just tell the data, which CRS it has.
