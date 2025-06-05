@@ -90,9 +90,10 @@ colnames(df_perc) <- c("Broad (%)", "Conifer (%)", "Mixed (%)")
 
 df_perc <- round(df_perc)
 
-
 # Number of cells. --------------------------------------------------------
-cells_coverage <- sum(!is.na(values(coverage)))
+cells_coverage_bro <- sum(!is.na(values(coverage[[1]])))
+cells_coverage_con <- sum(!is.na(values(coverage[[2]])))
+cells_coverage_mix <- sum(!is.na(values(coverage[[3]])))
 
 cells_mask_bro_30p <- sum(!is.na(values(masks[[1]][[1]])))
 cells_mask_bro_50p <- sum(!is.na(values(masks[[2]][[1]])))
@@ -115,8 +116,23 @@ cells_mask_mix_70p <- sum(!is.na(values(masks[[4]][[3]])))
 cells_mask_mix_90p <- sum(!is.na(values(masks[[5]][[3]])))
 cells_mask_mix_99p <- sum(!is.na(values(masks[[6]][[3]])))
 
-df_bro_cells <- data.frame(cells_coverage, cells_mask_bro_30p, cells_mask_bro_50p, cells_mask_bro_66p, cells_mask_bro_70p, cells_mask_bro_90p, cells_mask_bro_99p)
-df_con_cells <- data.frame(cells_coverage, cells_mask_con_30p, cells_mask_con_50p, cells_mask_con_66p, cells_mask_con_70p, cells_mask_con_90p, cells_mask_con_99p)
-df_mix_cells <- data.frame(cells_coverage, cells_mask_mix_30p, cells_mask_mix_50p, cells_mask_mix_66p, cells_mask_mix_70p, cells_mask_mix_90p, cells_mask_mix_99p)
+vec_bro_cells <- c(cells_coverage_bro, cells_mask_bro_30p, cells_mask_bro_50p, cells_mask_bro_66p, cells_mask_bro_70p, cells_mask_bro_90p, cells_mask_bro_99p)
+vec_con_cells <- c(cells_coverage_con, cells_mask_con_30p, cells_mask_con_50p, cells_mask_con_66p, cells_mask_con_70p, cells_mask_con_90p, cells_mask_con_99p)
+vec_mix_cells <- c(cells_coverage_mix, cells_mask_mix_30p, cells_mask_mix_50p, cells_mask_mix_66p, cells_mask_mix_70p, cells_mask_mix_90p, cells_mask_mix_99p)
 
-df <- bind_cols(df_bro_cells, df_con_cells, df_mix_cells)
+df <- data.frame(vec_bro_cells, vec_con_cells, vec_mix_cells)
+
+row.names(df) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
+colnames(df) <- c("Broad (ncells)", "Conifer (ncells)", "Mixed (ncells)")
+
+# Percentage of cells.  --------------------------------------------------------
+df_bro_ncells_perc <- data.frame(df[1]/df[[1]][1]*100)
+df_con_ncells_perc <- data.frame(df[2]/df[[2]][1]*100)
+df_mix_ncells_perc <- data.frame(df[3]/df[[3]][1]*100)
+
+df_perc <- bind_cols(df_bro_ncells_perc, df_con_ncells_perc, df_mix_ncells_perc)
+
+row.names(df_perc) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
+colnames(df_perc) <- c("Broad (ncells%)", "Conifer (ncells%)", "Mixed (ncells%)")
+
+df_perc <- round(df_perc, digits = 1)
