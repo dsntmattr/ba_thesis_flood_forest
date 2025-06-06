@@ -1,11 +1,15 @@
 # 00 Packages ---------------------------------------------------------
-library(sf) # for vector data
-library(tidyverse) # for tables and other stuff
-library(magrittr) # for %>%
-library(terra) # for raster data
-library(rstac) # for data access
-library(magrittr) # for %>%
-library(gdalcubes) # for raster cubes
+
+# Spatial data
+library(gdalcubes)   # raster cubes
+library(sf)          # vector
+library(terra)       # raster
+
+# Data access.
+library(rstac)       # access to STAC-catalouges
+
+# Data manipulation and more.
+library(tidyverse)
 
 # 01 Flooded forests ---------------------------------------------------------
 # Intersect floodplains and forest areas

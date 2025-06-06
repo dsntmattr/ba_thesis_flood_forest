@@ -1,8 +1,11 @@
 # 00 Packages ---------------------------------------------------------
-library(sf) # for vector data
-library(tidyverse) # for tables and other stuff
-library(terra) # for raster data
-library(magrittr) # for %>%
+
+# Spatial data
+library(sf)          # vector
+library(terra)       # raster
+
+# Data manipulation and more.
+library(tidyverse)
 
 # Load data. --------------------------------------------------------------
 #  coverage layers.
