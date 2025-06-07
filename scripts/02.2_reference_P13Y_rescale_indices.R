@@ -22,11 +22,14 @@ dates <- sort(dates)
 ## Pointer to images path
 ## The goal is to create one image collection for each month. 
 ## Therefore, we need one path pointer for each month.
-path_05 <- list.files(path="work/P1M", pattern= "-05-", full.names=TRUE)
-path_06 <- list.files(path="work/P1M", pattern= "-06-", full.names=TRUE)
-path_07 <- list.files(path="work/P1M", pattern= "-07-", full.names=TRUE)
-path_08 <- list.files(path="work/P1M", pattern= "-08-", full.names=TRUE)
-path_09 <- list.files(path="work/P1M", pattern= "-09-", full.names=TRUE)
+
+input <- "work/reference/P1M"
+
+path_05 <- list.files(path = input, pattern = "-05-", full.names = TRUE)
+path_06 <- list.files(path = input, pattern = "-06-", full.names = TRUE)
+path_07 <- list.files(path = input, pattern = "-07-", full.names = TRUE)
+path_08 <- list.files(path = input, pattern = "-08-", full.names = TRUE)
+path_09 <- list.files(path = input, pattern = "-09-", full.names = TRUE)
 
 # Format datetimes --------------------------------------------------------
 
@@ -40,11 +43,13 @@ dates_09 <- dates[format(dates, "%m") == "09"]
 
 # Create image collections ------------------------------------------------
 
-col_05 <- create_image_collection(path_05, date_time = dates_05, band_names = c("x1", "x2", "x3"))
-col_06 <- create_image_collection(path_06, date_time = dates_06, band_names = c("x1", "x2", "x3"))
-col_07 <- create_image_collection(path_07, date_time = dates_07, band_names = c("x1", "x2", "x3"))
-col_08 <- create_image_collection(path_08, date_time = dates_08, band_names = c("x1", "x2", "x3"))
-col_09 <- create_image_collection(path_09, date_time = dates_09, band_names = c("x1", "x2", "x3"))
+names <- c("x1", "x2", "x3")
+
+col_05 <- create_image_collection(path_05, date_time = dates_05, band_names = names)
+col_06 <- create_image_collection(path_06, date_time = dates_06, band_names = names)
+col_07 <- create_image_collection(path_07, date_time = dates_07, band_names = names)
+col_08 <- create_image_collection(path_08, date_time = dates_08, band_names = names)
+col_09 <- create_image_collection(path_09, date_time = dates_09, band_names = names)
 
 # Preparing cube views ----------------------------------------------------
 
@@ -52,7 +57,7 @@ col_09 <- create_image_collection(path_09, date_time = dates_09, band_names = c(
 wkt2 <- "PROJCS[\"unnamed\",GEOGCS[\"Unknown datum based upon the custom spheroid\",DATUM[\"Not specified (based on custom spheroid)\",SPHEROID[\"Custom spheroid\",6371007.181,0]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Sinusoidal\"],PARAMETER[\"longitude_of_center\",0],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"Meter\",1],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]"
 
 # Load boundig box vector
-load("raw/bbox.vector.RData")
+load("work/bbox.vector.RData")
 
 #set area of interest
 aoi   <- bbox.vector
@@ -170,88 +175,92 @@ nirv_09 <- apply_pixel (cube_09_scaled_0_1, "((x2 - x1) / (x2 + x1)) * x2", "NIR
 
 # SAVING ------------------------------------------------------------------
 
-## Saving the pictures
+out <- "work/reference/P13Y"
+
+
+# Saving the pictures. --------------------------------------------------
 write_tif((cube_05),
-          dir="work/P13Y",
-          prefix='MODIS_05_')
+          dir = out,
+          prefix = 'MODIS_05_')
 
 write_tif((cube_06),
-          dir="work/P13Y",
-          prefix='MODIS_06_')
+          dir = out,
+          prefix = 'MODIS_06_')
 
 write_tif((cube_07),
-          dir="work/P13Y",
-          prefix='MODIS_07_')
+          dir = out,
+          prefix = 'MODIS_07_')
 
 write_tif((cube_08),
-          dir="work/P13Y",
-          prefix='MODIS_08_')
+          dir = out,
+          prefix = 'MODIS_08_')
 
 write_tif((cube_09),
-          dir="work/P13Y",
-          prefix='MODIS_09_')
+          dir = out,
+          prefix = 'MODIS_09_')
 
-## Saving the NDVIs
+
+# Saving the NDVIs --------------------------------------------------------
 write_tif((ndvi_05),
-          dir="work/P13Y",
-          prefix='NDVI_05_')
+          dir = out,
+          prefix = 'NDVI_05_')
 
 write_tif((ndvi_06),
-          dir="work/P13Y",
-          prefix='NDVI_06_')
+          dir = out,
+          prefix = 'NDVI_06_')
 
 write_tif((ndvi_07),
-          dir="work/P13Y",
-          prefix='NDVI_07_')
+          dir = out,
+          prefix = 'NDVI_07_')
 
 write_tif((ndvi_08),
-          dir="work/P13Y",
-          prefix='NDVI_08_')
+          dir = out,
+          prefix = 'NDVI_08_')
 
 write_tif((ndvi_09),
-          dir="work/P13Y",
-          prefix='NDVI_09_')
+          dir = out,
+          prefix = 'NDVI_09_')
 
-## Saving the EVIs
+
+# Saving the EVIs ---------------------------------------------------------
 write_tif((evi_05),
-          dir="work/P13Y",
-          prefix='EVI_05_')
+          dir = out,
+          prefix = 'EVI_05_')
 
 write_tif((evi_06),
-          dir="work/P13Y",
-          prefix='EVI_06_')
+          dir = out,
+          prefix = 'EVI_06_')
 
 write_tif((evi_07),
-          dir="work/P13Y",
-          prefix='EVI_07_')
+          dir = out,
+          prefix = 'EVI_07_')
 
 write_tif((evi_08),
-          dir="work/P13Y",
-          prefix='EVI_08_')
+          dir = out,
+          prefix = 'EVI_08_')
 
 write_tif((evi_09),
-          dir="work/P13Y",
-          prefix='EVI_09_')
+          dir = out,
+          prefix = 'EVI_09_')
 
-## Saving the NIRv
+
+# Saving the NIRv ---------------------------------------------------------
 write_tif((nirv_05),
-          dir="work/P13Y",
-          prefix='NIRv_05_')
+          dir = out,
+          prefix = 'NIRv_05_')
 
 write_tif((nirv_06),
-          dir="work/P13Y",
-          prefix='NIRv_06_')
+          dir = out,
+          prefix = 'NIRv_06_')
 
 write_tif((nirv_07),
-          dir="work/P13Y",
-          prefix='NIRv_07_')
+          dir = out,
+          prefix = 'NIRv_07_')
 
 write_tif((nirv_08),
-          dir="work/P13Y",
-          prefix='NIRv_08_')
+          dir = out,
+          prefix = 'NIRv_08_')
 
 write_tif((nirv_09),
-          dir="work/P13Y",
-          prefix='NIRv_09_')
-
-# Ergebnis: Durchschnittswerte der Indices für jeden Monat über die Referenzperiode
+          dir = out,
+          prefix = 'NIRv_09_')
