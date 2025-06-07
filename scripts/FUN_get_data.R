@@ -1,4 +1,7 @@
-# Function to load data from catalog and aggregate it over a selected timespane.
+# Function to load MODIS data from catalog,
+# aggregate it over a selected timespane
+# and rescaling the cell values to values between 0 and 1.
+
 
 # Needed variables:
 
@@ -67,7 +70,9 @@ get_data = function(aoi, toi, coll, bds, dt, out, pre) {
                     aggregation = "mean",
                     resampling = "bilinear")
   
-  cube = raster_cube(collection, v)
+  cube = raster_cube(collection, v) %>%
+     apply_pixel( c("Nadir_Reflectance_Band1 / 10000", "Nadir_Reflectance_Band2 / 10000", "Nadir_Reflectance_Band3 / 10000"), c("x1", "x2", "x3")
+    )
   
   # Saving
   write_tif((cube),
