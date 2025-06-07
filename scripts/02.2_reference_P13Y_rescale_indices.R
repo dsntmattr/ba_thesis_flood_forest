@@ -23,7 +23,7 @@ dates <- sort(dates)
 ## The goal is to create one image collection for each month. 
 ## Therefore, we need one path pointer for each month.
 
-input <- "work/reference/P1M"
+input <- "data/work/reference/P1M"
 
 path_05 <- list.files(path = input, pattern = "-05-", full.names = TRUE)
 path_06 <- list.files(path = input, pattern = "-06-", full.names = TRUE)
@@ -57,7 +57,7 @@ col_09 <- create_image_collection(path_09, date_time = dates_09, band_names = na
 wkt2 <- "PROJCS[\"unnamed\",GEOGCS[\"Unknown datum based upon the custom spheroid\",DATUM[\"Not specified (based on custom spheroid)\",SPHEROID[\"Custom spheroid\",6371007.181,0]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Sinusoidal\"],PARAMETER[\"longitude_of_center\",0],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"Meter\",1],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]"
 
 # Load boundig box vector
-load("work/bbox.vector.RData")
+load("data/work/bbox.vector.RData")
 
 #set area of interest
 aoi   <- bbox.vector
@@ -175,7 +175,7 @@ nirv_09 <- apply_pixel (cube_09_scaled_0_1, "((x2 - x1) / (x2 + x1)) * x2", "NIR
 
 # SAVING ------------------------------------------------------------------
 
-out <- "work/reference/P13Y"
+out <- "data/work/reference/P13Y"
 
 
 # Saving the pictures. --------------------------------------------------
