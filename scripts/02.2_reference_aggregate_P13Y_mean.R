@@ -25,8 +25,11 @@ cube_08_P13Y <- reduce_time(cube_08, "mean(x1)", "mean(x2)", "mean(x3)")
 cube_09_P13Y <- reduce_time(cube_09, "mean(x1)", "mean(x2)", "mean(x3)")
 
 # Save the pictures.
-write_tif(cube_05_P13Y, "data/work/reference/P13Y/test/")
-write_tif(cube_06_P13Y, "data/work/reference/P13Y/test/")
-write_tif(cube_07_P13Y, "data/work/reference/P13Y/test/")
-write_tif(cube_08_P13Y, "data/work/reference/P13Y/test/")
-write_tif(cube_09_P13Y, "data/work/reference/P13Y/test/")
+prefix <-  "MODIS_"
+dir <- "data/work/reference/P13Y/"
+
+write_tif(cube_05_P13Y, dir = dir, prefix = prefix)
+write_tif(cube_06_P13Y, dir = dir, prefix = prefix)
+write_tif(cube_07_P13Y, dir = dir, prefix = prefix)
+write_tif(cube_08_P13Y, dir = dir, prefix = prefix)
+write_tif(cube_09_P13Y, dir = dir, prefix = prefix)
