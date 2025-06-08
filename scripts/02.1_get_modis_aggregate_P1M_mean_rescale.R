@@ -1,5 +1,6 @@
-# Getting the raw MODIS scenes for our study area, aggregated to one picture for each month.
-
+# load MODIS data from catalog,
+# aggregate to one picture per month with mean values for each cell, 
+# and rescaling the cell values to values between 0 and 1.
 # Packages ---------------------------------------------------------
 # Spatial data
 library(gdalcubes)   # raster cubes
@@ -9,10 +10,8 @@ library(rstac)
 # Data manipulation and more.
 library(magrittr)
 
-# Create function to load MODIS data from catalog,
-# aggregate to one picture per month with mean values for each cell, 
-# and rescaling the cell values to values between 0 and 1.
 
+# Create function. --------------------------------------------------------
 # Needed variables:
 
 # aoi (bounding box of area of interest as vector)
@@ -92,12 +91,6 @@ get_data = function(aoi, toi, out, pre) {
 load("data/work/bbox.vector.RData")    
 aoi  <- bbox.vector               
 pre  <- 'MODIS_'
-
-# Get the data. -----------------------------------------------------------
-# Load the data for each TOI,
-# aggregate the scenes to one picture for each month
-# and calculate the mean value.
-
 
 # Reference period. -------------------------------------------------------
 
