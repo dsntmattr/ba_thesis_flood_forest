@@ -73,7 +73,7 @@ NDVI, EVI, NIRv
 - Ermitteln der überfluteten Waldlfäche je Waldtyp
 - Erstellen einer Bounding Box des Untersuchungsgebiet
 - Ermitteln der prozentualen Flutwaldbedeckung jeder Rasterzelle
-- Erstellen von Masken auf Grundlage der Flutwaldbedeckung je Rasterzelle
+- Erstellen von Masken auf Grundlage der Flutwaldbedeckung je Rasterzelle (jede Maske = Rasterdatei mit 3 Layern, Layer 1: Laubwald, Layer 2:     Nadelwald, Layer 3: Mischwald)
 
 **`01_calculate_remaining_area_percentage_pixels.R` **
 
@@ -144,7 +144,7 @@ NDVI, EVI, NIRv
 
 📤 Ausgangsdaten:
 
-- `data/work/reference/P13Y`
+- `data/work/reference/P13Y/`
 
 🧾 Zweck:
 
@@ -161,7 +161,7 @@ NDVI, EVI, NIRv
 
 📥 Eingangsdaten:
 
-- `data/work/reference/P13Y`
+- `data/work/reference/P13Y/`
 - `data/work/study/P1M/`
 
 📤 Ausgangsdaten:
@@ -171,26 +171,39 @@ NDVI, EVI, NIRv
 
 🧾 Zweck:
 
-- Berechnung der Vegetationsindizes NDVI, EVI und NIRv für die über 13 Jahre zusammengefassten Bilder der Referenzperiode 
+- Berechnung der Vegetationsindizes NDVI, EVI und NIRv für die über 13 Jahre      zusammengefassten Bilder der Referenzperiode 
   sowie für die Monatsbilder des Untersuchungszeitraum
 
 **`02.4_create_dataframes_from_masked_indices`**
 
 📦 Pakete:
 
--
+- `dplyr`
+- `magrittr`
+- `terra`
 
 📥 Eingangsdaten:
 
--
+- `data/work/reference/indices`
+- `data/work/study/indices`
+- `mask_30p.tif`
+- `mask_50p.tif`
+- `mask_66p.tif`
+- `mask_70p.tif`
+- `mask_90p.tif`
+- `mask_99p.tif`
 
 📤 Ausgangsdaten:
 
--
+- `df_differences.RData`
 
 🧾 Zweck:
 
--
+- Maskieren der Indexbilder (Referenzperiode und Untersuchungszeitraum) mit den Masken aus `01_create_aoi_coverages_and_masks.R`
+- Berechnen des Mittelwerts je maskiertem Bild (Summe aller Zellwerte/Anzahl der Zellen)
+- Zusammenfassen/Kombinieren der Mittelwerte in *dataframes*
+- Berechnen von Differenzwerten (Mittelwert des Untersuchungszeitraum - Mittelwert der Referenzperiode)
+- Mittelwertsabweichung des jeweiligen Index je Monat des Untersuchungszeitraum vom Mittelwert dieses Monat über die Referenzperiode
 
 
 

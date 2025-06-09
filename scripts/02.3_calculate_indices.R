@@ -6,7 +6,7 @@ library(terra)     # raster
 # Data manipulation and more.
 library(magrittr)
 
-# Reference period.
+# Reference period.  ----------------------------------------------------------------
 paths <- list.files(path = "data/work/reference/P13Y", pattern = "MODIS", full.names = TRUE)
 
 cube <- stack_cube(paths, datetime_values = c("2000-05", "2000-06", "2000-07", "2000-08", "2000-09"))
@@ -21,7 +21,7 @@ write_tif((ndvi), dir = out, prefix = 'NDVI_')
 write_tif((evi), dir = out, prefix = 'EVI_')
 write_tif((nirv), dir = out, prefix = 'NIRv_')
 
-# Study period.
+# Study period.  ----------------------------------------------------------------
 
 paths <- list.files(path = "data/work/study/P1M", pattern = "MODIS", full.names = TRUE)
 cube  <- stack_cube(paths, datetime_values = c("2013-05", "2013-06", "2013-07", "2013-08", "2013-09",
