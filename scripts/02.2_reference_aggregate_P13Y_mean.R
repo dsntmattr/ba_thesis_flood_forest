@@ -1,7 +1,7 @@
 # Aggregate the P1M reference pictures to P13Y (one picute for each month over the whole reference period).
 
-# Packages ----------------------------------------------------------------
-library(gdalcubes)
+# Spatial data
+library(gdalcubes)   # raster cubes
 
 # Get the paths.
 paths_05 <- list.files(path = "data/work/reference/P1M", pattern = "-05-", full.names = TRUE)

@@ -1,8 +1,10 @@
 # Packages ----------------------------------------------------------------
+# Spatial data
+library(gdalcubes) # raster cubes
+library(sf)        # vector
+library(terra)     # raster
+# Data manipulation and more.
 library(magrittr)
-library(terra)
-library(sf)
-library(gdalcubes)
 
 # Reference period.
 paths <- list.files(path = "data/work/reference/P13Y", pattern = "MODIS", full.names = TRUE)
