@@ -20,7 +20,7 @@ mask_mean = function(raster, mask) {
 }
 
 # Setting the new names for columns and rows of the resluting dataframe
-new_col_names <- c("EVI_Broad","EVI_Conifer", "EVI_Mixed", "NDVI_Broad","NDVI_Conifer", "NDVI_Mixed", "NIRv_Broad", "NIRv_Conifer", "NIRv_Mixed")
+new_col_names <- c("NDVI_Broad","NDVI_Conifer", "NDVI_Mixed", "EVI_Broad","EVI_Conifer", "EVI_Mixed", "NIRv_Broad", "NIRv_Conifer", "NIRv_Mixed")
 new_row_names <- c("May", "June", "July", "August", "September")
 
 # 30 percent coverage masking -----------------------------------------------------
@@ -28,20 +28,20 @@ new_row_names <- c("May", "June", "July", "August", "September")
 mask <- rast("data/work/mask_30p.tif")
 
 # Mask and Mean
-evi_bro_mean <- mask_mean(evi, mask[[1]])
-evi_con_mean <- mask_mean(evi, mask[[2]])
-evi_mix_mean <- mask_mean(evi, mask[[3]])
-
 ndvi_bro_mean <- mask_mean(ndvi, mask[[1]])
 ndvi_con_mean <- mask_mean(ndvi, mask[[2]])
 ndvi_mix_mean <- mask_mean(ndvi, mask[[3]])
+
+evi_bro_mean <- mask_mean(evi, mask[[1]])
+evi_con_mean <- mask_mean(evi, mask[[2]])
+evi_mix_mean <- mask_mean(evi, mask[[3]])
 
 nirv_bro_mean <- mask_mean(nirv, mask[[1]])
 nirv_con_mean <- mask_mean(nirv, mask[[2]])
 nirv_mix_mean <- mask_mean(nirv, mask[[3]])
 
 # Create the dataframe
-df_ref <- data.frame(evi_bro_mean, evi_con_mean, evi_mix_mean, ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
+df_ref <- data.frame(ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, evi_bro_mean, evi_con_mean, evi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
 colnames(df_ref)  <- new_col_names
 row.names(df_ref) <- new_row_names
 
@@ -53,21 +53,20 @@ df_ref_30p <- df_ref
 mask <- rast("data/work/mask_50p.tif")
 
 # Mask and Mean
-evi_bro_mean <- mask_mean(evi, mask[[1]])
-evi_con_mean <- mask_mean(evi, mask[[2]])
-evi_mix_mean <- mask_mean(evi, mask[[3]])
-
 ndvi_bro_mean <- mask_mean(ndvi, mask[[1]])
 ndvi_con_mean <- mask_mean(ndvi, mask[[2]])
 ndvi_mix_mean <- mask_mean(ndvi, mask[[3]])
+
+evi_bro_mean <- mask_mean(evi, mask[[1]])
+evi_con_mean <- mask_mean(evi, mask[[2]])
+evi_mix_mean <- mask_mean(evi, mask[[3]])
 
 nirv_bro_mean <- mask_mean(nirv, mask[[1]])
 nirv_con_mean <- mask_mean(nirv, mask[[2]])
 nirv_mix_mean <- mask_mean(nirv, mask[[3]])
 
 # Create the dataframe
-df_ref <- data.frame(evi_bro_mean, evi_con_mean, evi_mix_mean, ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
-colnames(df_ref)  <- new_col_names
+df_ref <- data.frame(ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, evi_bro_mean, evi_con_mean, evi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
 row.names(df_ref) <- new_row_names
 
 ## Save the dataframe
@@ -78,21 +77,20 @@ df_ref_50p <- df_ref
 mask <- rast("data/work/mask_66p.tif")
 
 # Mask and Mean
-evi_bro_mean <- mask_mean(evi, mask[[1]])
-evi_con_mean <- mask_mean(evi, mask[[2]])
-evi_mix_mean <- mask_mean(evi, mask[[3]])
-
 ndvi_bro_mean <- mask_mean(ndvi, mask[[1]])
 ndvi_con_mean <- mask_mean(ndvi, mask[[2]])
 ndvi_mix_mean <- mask_mean(ndvi, mask[[3]])
+
+evi_bro_mean <- mask_mean(evi, mask[[1]])
+evi_con_mean <- mask_mean(evi, mask[[2]])
+evi_mix_mean <- mask_mean(evi, mask[[3]])
 
 nirv_bro_mean <- mask_mean(nirv, mask[[1]])
 nirv_con_mean <- mask_mean(nirv, mask[[2]])
 nirv_mix_mean <- mask_mean(nirv, mask[[3]])
 
 # Create the dataframe
-df_ref <- data.frame(evi_bro_mean, evi_con_mean, evi_mix_mean, ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
-colnames(df_ref)  <- new_col_names
+df_ref <- data.frame(ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, evi_bro_mean, evi_con_mean, evi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
 row.names(df_ref) <- new_row_names
 
 ## Save the dataframe
@@ -103,20 +101,20 @@ df_ref_66p <- df_ref
 mask <- rast("data/work/mask_70p.tif")
 
 # Mask and Mean
-evi_bro_mean <- mask_mean(evi, mask[[1]])
-evi_con_mean <- mask_mean(evi, mask[[2]])
-evi_mix_mean <- mask_mean(evi, mask[[3]])
-
 ndvi_bro_mean <- mask_mean(ndvi, mask[[1]])
 ndvi_con_mean <- mask_mean(ndvi, mask[[2]])
 ndvi_mix_mean <- mask_mean(ndvi, mask[[3]])
+
+evi_bro_mean <- mask_mean(evi, mask[[1]])
+evi_con_mean <- mask_mean(evi, mask[[2]])
+evi_mix_mean <- mask_mean(evi, mask[[3]])
 
 nirv_bro_mean <- mask_mean(nirv, mask[[1]])
 nirv_con_mean <- mask_mean(nirv, mask[[2]])
 nirv_mix_mean <- mask_mean(nirv, mask[[3]])
 
 # Create the dataframe
-df_ref <- data.frame(evi_bro_mean, evi_con_mean, evi_mix_mean, ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
+df_ref <- data.frame(ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, evi_bro_mean, evi_con_mean, evi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
 colnames(df_ref)  <- new_col_names
 row.names(df_ref) <- new_row_names
 
@@ -127,20 +125,20 @@ df_ref_70p <- df_ref
 # Loading the mask
 mask <- rast("data/work/mask_90p.tif")
 # Mask and Mean
-evi_bro_mean <- mask_mean(evi, mask[[1]])
-evi_con_mean <- mask_mean(evi, mask[[2]])
-evi_mix_mean <- mask_mean(evi, mask[[3]])
-
 ndvi_bro_mean <- mask_mean(ndvi, mask[[1]])
 ndvi_con_mean <- mask_mean(ndvi, mask[[2]])
 ndvi_mix_mean <- mask_mean(ndvi, mask[[3]])
+
+evi_bro_mean <- mask_mean(evi, mask[[1]])
+evi_con_mean <- mask_mean(evi, mask[[2]])
+evi_mix_mean <- mask_mean(evi, mask[[3]])
 
 nirv_bro_mean <- mask_mean(nirv, mask[[1]])
 nirv_con_mean <- mask_mean(nirv, mask[[2]])
 nirv_mix_mean <- mask_mean(nirv, mask[[3]])
 
 # Create the dataframe
-df_ref <- data.frame(evi_bro_mean, evi_con_mean, evi_mix_mean, ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
+df_ref <- data.frame(ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, evi_bro_mean, evi_con_mean, evi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
 colnames(df_ref)  <- new_col_names
 row.names(df_ref) <- new_row_names
 
@@ -151,20 +149,20 @@ df_ref_90p <- df_ref
 # Loading the mask
 mask <- rast("data/work/mask_99p.tif")
 # Mask and Mean
-evi_bro_mean <- mask_mean(evi, mask[[1]])
-evi_con_mean <- mask_mean(evi, mask[[2]])
-evi_mix_mean <- mask_mean(evi, mask[[3]])
-
 ndvi_bro_mean <- mask_mean(ndvi, mask[[1]])
 ndvi_con_mean <- mask_mean(ndvi, mask[[2]])
 ndvi_mix_mean <- mask_mean(ndvi, mask[[3]])
+
+evi_bro_mean <- mask_mean(evi, mask[[1]])
+evi_con_mean <- mask_mean(evi, mask[[2]])
+evi_mix_mean <- mask_mean(evi, mask[[3]])
 
 nirv_bro_mean <- mask_mean(nirv, mask[[1]])
 nirv_con_mean <- mask_mean(nirv, mask[[2]])
 nirv_mix_mean <- mask_mean(nirv, mask[[3]])
 
 # Create the dataframe
-df_ref <- data.frame(evi_bro_mean, evi_con_mean, evi_mix_mean, ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
+df_ref <- data.frame(ndvi_bro_mean, ndvi_con_mean, ndvi_mix_mean, evi_bro_mean, evi_con_mean, evi_mix_mean, nirv_bro_mean, nirv_con_mean, nirv_mix_mean)
 colnames(df_ref)  <- new_col_names
 row.names(df_ref) <- new_row_names
 
@@ -172,12 +170,12 @@ row.names(df_ref) <- new_row_names
 df_ref_99p <- df_ref
 
 # Combine the reference dataframes  -----------------------------------------------------
-new_col_names_30p <- c("EVI_Broad_30p","EVI_Conifer_30p", "EVI_Mixed_30p", "NDVI_Broad_30p","NDVI_Conifer_30p", "NDVI_Mixed_30p", "NIRv_Broad_30p", "NIRv_Conifer_30p", "NIRv_Mixed_30p")
-new_col_names_50p <- c("EVI_Broad_50p","EVI_Conifer_50p", "EVI_Mixed_50p", "NDVI_Broad_50p","NDVI_Conifer_50p", "NDVI_Mixed_50p", "NIRv_Broad_50p", "NIRv_Conifer_50p", "NIRv_Mixed_50p")
-new_col_names_66p <- c("EVI_Broad_66p","EVI_Conifer_66p", "EVI_Mixed_66p", "NDVI_Broad_66p","NDVI_Conifer_66p", "NDVI_Mixed_66p", "NIRv_Broad_66p", "NIRv_Conifer_66p", "NIRv_Mixed_66p")
-new_col_names_70p <- c("EVI_Broad_70p","EVI_Conifer_70p", "EVI_Mixed_70p", "NDVI_Broad_70p","NDVI_Conifer_70p", "NDVI_Mixed_70p", "NIRv_Broad_70p", "NIRv_Conifer_70p", "NIRv_Mixed_70p")
-new_col_names_90p <- c("EVI_Broad_90p","EVI_Conifer_90p", "EVI_Mixed_90p", "NDVI_Broad_90p","NDVI_Conifer_90p", "NDVI_Mixed_90p", "NIRv_Broad_90p", "NIRv_Conifer_90p", "NIRv_Mixed_90p")
-new_col_names_99p <- c("EVI_Broad_99p","EVI_Conifer_99p", "EVI_Mixed_99p", "NDVI_Broad_99p","NDVI_Conifer_99p", "NDVI_Mixed_99p", "NIRv_Broad_99p", "NIRv_Conifer_99p", "NIRv_Mixed_99p")
+new_col_names_30p <- c("NDVI_Broad_30p","NDVI_Conifer_30p", "NDVI_Mixed_30p", "EVI_Broad_30p","EVI_Conifer_30p", "EVI_Mixed_30p", "NIRv_Broad_30p", "NIRv_Conifer_30p", "NIRv_Mixed_30p")
+new_col_names_50p <- c("NDVI_Broad_50p","NDVI_Conifer_50p", "NDVI_Mixed_50p", "EVI_Broad_50p","EVI_Conifer_50p", "EVI_Mixed_50p", "NIRv_Broad_50p", "NIRv_Conifer_50p", "NIRv_Mixed_50p")
+new_col_names_66p <- c("NDVI_Broad_66p","NDVI_Conifer_66p", "NDVI_Mixed_66p", "EVI_Broad_66p","EVI_Conifer_66p", "EVI_Mixed_66p", "NIRv_Broad_66p", "NIRv_Conifer_66p", "NIRv_Mixed_66p")
+new_col_names_70p <- c("NDVI_Broad_70p","NDVI_Conifer_70p", "NDVI_Mixed_70p", "EVI_Broad_70p","EVI_Conifer_70p", "EVI_Mixed_70p", "NIRv_Broad_70p", "NIRv_Conifer_70p", "NIRv_Mixed_70p")
+new_col_names_90p <- c("NDVI_Broad_90p","NDVI_Conifer_90p", "NDVI_Mixed_90p", "EVI_Broad_90p","EVI_Conifer_90p", "EVI_Mixed_90p", "NIRv_Broad_90p", "NIRv_Conifer_90p", "NIRv_Mixed_90p")
+new_col_names_99p <- c("NDVI_Broad_99p","NDVI_Conifer_99p", "NDVI_Mixed_99p", "EVI_Broad_99p","EVI_Conifer_99p", "EVI_Mixed_99p", "NIRv_Broad_99p", "NIRv_Conifer_99p", "NIRv_Mixed_99p")
 
 colnames(df_ref_30p) <- new_col_names_30p
 colnames(df_ref_50p) <- new_col_names_50p
@@ -191,23 +189,23 @@ df_ref_combined <- cbind(df_ref_30p, df_ref_50p, df_ref_66p, df_ref_70p, df_ref_
 # Study period. ---------------------------------------------------------
 
 # Setting the new names for columns and rows of the resluting dataframe
-new_col_names <- c("EVI_Broad","EVI_Conifer", "EVI_Mixed", "NDVI_Broad","NDVI_Conifer", "NDVI_Mixed", "NIRv_Broad", "NIRv_Conifer", "NIRv_Mixed")
+new_col_names <- c("NDVI_Broad","NDVI_Conifer", "NDVI_Mixed", "EVI_Broad","EVI_Conifer", "EVI_Mixed", "NIRv_Broad", "NIRv_Conifer", "NIRv_Mixed")
 new_row_names <- c("May", "June", "July", "August", "September")
 
 # Loading the indices pictures per year and index-----------------------------------------------------
 path <- "data/work/study/indices/"
-
-evi_2013 <- rast(list.files(path = path, pattern = "EVI_2013", full.names = TRUE))
-evi_2014 <- rast(list.files(path = path, pattern = "EVI_2014", full.names = TRUE))
-evi_2015 <- rast(list.files(path = path, pattern = "EVI_2015", full.names = TRUE))
-evi_2016 <- rast(list.files(path = path, pattern = "EVI_2016", full.names = TRUE))
-evi_2017 <- rast(list.files(path = path, pattern = "EVI_2017", full.names = TRUE))
 
 ndvi_2013 <- rast(list.files(path = path, pattern = "NDVI_2013", full.names = TRUE))
 ndvi_2014 <- rast(list.files(path = path, pattern = "NDVI_2014", full.names = TRUE))
 ndvi_2015 <- rast(list.files(path = path, pattern = "NDVI_2015", full.names = TRUE))
 ndvi_2016 <- rast(list.files(path = path, pattern = "NDVI_2016", full.names = TRUE))
 ndvi_2017 <- rast(list.files(path = path, pattern = "NDVI_2017", full.names = TRUE))
+
+evi_2013 <- rast(list.files(path = path, pattern = "EVI_2013", full.names = TRUE))
+evi_2014 <- rast(list.files(path = path, pattern = "EVI_2014", full.names = TRUE))
+evi_2015 <- rast(list.files(path = path, pattern = "EVI_2015", full.names = TRUE))
+evi_2016 <- rast(list.files(path = path, pattern = "EVI_2016", full.names = TRUE))
+evi_2017 <- rast(list.files(path = path, pattern = "EVI_2017", full.names = TRUE))
 
 nirv_2013 <- rast(list.files(path = path, pattern = "NIRv_2013", full.names = TRUE))
 nirv_2014 <- rast(list.files(path = path, pattern = "NIRv_2014", full.names = TRUE))
@@ -220,25 +218,6 @@ nirv_2017 <- rast(list.files(path = path, pattern = "NIRv_2017", full.names = TR
 mask <- rast("data/work/mask_30p.tif")
 
 # Mask and Mean
-# EVI
-evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
-evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
-evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
-evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
-evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
-
-evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
-evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
-evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
-evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
-evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
-
-evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
-evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
-evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
-evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
-evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
-
 # NDVI
 ndvi_2013_bro_mean <- mask_mean(ndvi_2013, mask[[1]])
 ndvi_2014_bro_mean <- mask_mean(ndvi_2014, mask[[1]])
@@ -257,6 +236,25 @@ ndvi_2014_mix_mean <- mask_mean(ndvi_2014, mask[[3]])
 ndvi_2015_mix_mean <- mask_mean(ndvi_2015, mask[[3]])
 ndvi_2016_mix_mean <- mask_mean(ndvi_2016, mask[[3]])
 ndvi_2017_mix_mean <- mask_mean(ndvi_2017, mask[[3]])
+
+# EVI
+evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
+evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
+evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
+evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
+evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
+
+evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
+evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
+evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
+evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
+evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
+
+evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
+evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
+evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
+evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
+evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NIRv
 nirv_2013_bro_mean <- mask_mean(nirv_2013, mask[[1]])
@@ -278,11 +276,11 @@ nirv_2016_mix_mean <- mask_mean(nirv_2016, mask[[3]])
 nirv_2017_mix_mean <- mask_mean(nirv_2017, mask[[3]])
 
 # Create the dataframes 
-df_2013 <- data.frame(evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
-df_2014 <- data.frame(evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
-df_2015 <- data.frame(evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
-df_2016 <- data.frame(evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
-df_2017 <- data.frame(evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
+df_2013 <- data.frame(ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
+df_2014 <- data.frame(ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
+df_2015 <- data.frame(ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
+df_2016 <- data.frame(ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
+df_2017 <- data.frame(ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
 
 colnames(df_2013) <- new_col_names
 colnames(df_2014) <- new_col_names
@@ -307,24 +305,6 @@ df_2017_30p <- df_2017
 mask <- rast("data/work/mask_50p.tif")
 
 # Mask and Mean
-# EVI
-evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
-evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
-evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
-evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
-evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
-
-evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
-evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
-evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
-evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
-evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
-
-evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
-evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
-evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
-evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
-evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NDVI
 ndvi_2013_bro_mean <- mask_mean(ndvi_2013, mask[[1]])
@@ -344,6 +324,25 @@ ndvi_2014_mix_mean <- mask_mean(ndvi_2014, mask[[3]])
 ndvi_2015_mix_mean <- mask_mean(ndvi_2015, mask[[3]])
 ndvi_2016_mix_mean <- mask_mean(ndvi_2016, mask[[3]])
 ndvi_2017_mix_mean <- mask_mean(ndvi_2017, mask[[3]])
+
+# EVI
+evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
+evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
+evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
+evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
+evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
+
+evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
+evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
+evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
+evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
+evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
+
+evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
+evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
+evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
+evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
+evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NIRv
 nirv_2013_bro_mean <- mask_mean(nirv_2013, mask[[1]])
@@ -365,11 +364,11 @@ nirv_2016_mix_mean <- mask_mean(nirv_2016, mask[[3]])
 nirv_2017_mix_mean <- mask_mean(nirv_2017, mask[[3]])
 
 # Create the dataframes 
-df_2013 <- data.frame(evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
-df_2014 <- data.frame(evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
-df_2015 <- data.frame(evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
-df_2016 <- data.frame(evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
-df_2017 <- data.frame(evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
+df_2013 <- data.frame(ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
+df_2014 <- data.frame(ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
+df_2015 <- data.frame(ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
+df_2016 <- data.frame(ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
+df_2017 <- data.frame(ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
 
 colnames(df_2013) <- new_col_names
 colnames(df_2014) <- new_col_names
@@ -395,24 +394,6 @@ df_2017_50p <- df_2017
 mask <- rast("data/work/mask_66p.tif")
 
 # Mask and Mean
-# EVI
-evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
-evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
-evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
-evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
-evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
-
-evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
-evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
-evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
-evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
-evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
-
-evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
-evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
-evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
-evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
-evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NDVI
 ndvi_2013_bro_mean <- mask_mean(ndvi_2013, mask[[1]])
@@ -432,6 +413,25 @@ ndvi_2014_mix_mean <- mask_mean(ndvi_2014, mask[[3]])
 ndvi_2015_mix_mean <- mask_mean(ndvi_2015, mask[[3]])
 ndvi_2016_mix_mean <- mask_mean(ndvi_2016, mask[[3]])
 ndvi_2017_mix_mean <- mask_mean(ndvi_2017, mask[[3]])
+
+# EVI
+evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
+evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
+evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
+evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
+evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
+
+evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
+evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
+evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
+evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
+evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
+
+evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
+evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
+evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
+evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
+evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NIRv
 nirv_2013_bro_mean <- mask_mean(nirv_2013, mask[[1]])
@@ -453,11 +453,11 @@ nirv_2016_mix_mean <- mask_mean(nirv_2016, mask[[3]])
 nirv_2017_mix_mean <- mask_mean(nirv_2017, mask[[3]])
 
 # Create the dataframes 
-df_2013 <- data.frame(evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
-df_2014 <- data.frame(evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
-df_2015 <- data.frame(evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
-df_2016 <- data.frame(evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
-df_2017 <- data.frame(evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
+df_2013 <- data.frame(ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
+df_2014 <- data.frame(ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
+df_2015 <- data.frame(ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
+df_2016 <- data.frame(ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
+df_2017 <- data.frame(ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
 
 colnames(df_2013) <- new_col_names
 colnames(df_2014) <- new_col_names
@@ -482,24 +482,7 @@ df_2017_66p <- df_2017
 mask <- rast("data/work/mask_70p.tif")
 
 # Mask and Mean
-# EVI
-evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
-evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
-evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
-evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
-evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
 
-evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
-evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
-evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
-evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
-evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
-
-evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
-evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
-evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
-evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
-evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NDVI
 ndvi_2013_bro_mean <- mask_mean(ndvi_2013, mask[[1]])
@@ -519,6 +502,25 @@ ndvi_2014_mix_mean <- mask_mean(ndvi_2014, mask[[3]])
 ndvi_2015_mix_mean <- mask_mean(ndvi_2015, mask[[3]])
 ndvi_2016_mix_mean <- mask_mean(ndvi_2016, mask[[3]])
 ndvi_2017_mix_mean <- mask_mean(ndvi_2017, mask[[3]])
+
+# EVI
+evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
+evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
+evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
+evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
+evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
+
+evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
+evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
+evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
+evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
+evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
+
+evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
+evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
+evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
+evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
+evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NIRv
 nirv_2013_bro_mean <- mask_mean(nirv_2013, mask[[1]])
@@ -540,11 +542,11 @@ nirv_2016_mix_mean <- mask_mean(nirv_2016, mask[[3]])
 nirv_2017_mix_mean <- mask_mean(nirv_2017, mask[[3]])
 
 # Create the dataframes 
-df_2013 <- data.frame(evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
-df_2014 <- data.frame(evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
-df_2015 <- data.frame(evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
-df_2016 <- data.frame(evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
-df_2017 <- data.frame(evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
+df_2013 <- data.frame(ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
+df_2014 <- data.frame(ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
+df_2015 <- data.frame(ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
+df_2016 <- data.frame(ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
+df_2017 <- data.frame(ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
 
 colnames(df_2013) <- new_col_names
 colnames(df_2014) <- new_col_names
@@ -569,24 +571,7 @@ df_2017_70p <- df_2017
 mask <- rast("data/work/mask_90p.tif")
 
 # Mask and Mean
-# EVI
-evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
-evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
-evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
-evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
-evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
 
-evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
-evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
-evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
-evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
-evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
-
-evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
-evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
-evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
-evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
-evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NDVI
 ndvi_2013_bro_mean <- mask_mean(ndvi_2013, mask[[1]])
@@ -606,6 +591,25 @@ ndvi_2014_mix_mean <- mask_mean(ndvi_2014, mask[[3]])
 ndvi_2015_mix_mean <- mask_mean(ndvi_2015, mask[[3]])
 ndvi_2016_mix_mean <- mask_mean(ndvi_2016, mask[[3]])
 ndvi_2017_mix_mean <- mask_mean(ndvi_2017, mask[[3]])
+
+# EVI
+evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
+evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
+evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
+evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
+evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
+
+evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
+evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
+evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
+evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
+evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
+
+evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
+evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
+evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
+evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
+evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NIRv
 nirv_2013_bro_mean <- mask_mean(nirv_2013, mask[[1]])
@@ -627,11 +631,11 @@ nirv_2016_mix_mean <- mask_mean(nirv_2016, mask[[3]])
 nirv_2017_mix_mean <- mask_mean(nirv_2017, mask[[3]])
 
 # Create the dataframes 
-df_2013 <- data.frame(evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
-df_2014 <- data.frame(evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
-df_2015 <- data.frame(evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
-df_2016 <- data.frame(evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
-df_2017 <- data.frame(evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
+df_2013 <- data.frame(ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
+df_2014 <- data.frame(ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
+df_2015 <- data.frame(ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
+df_2016 <- data.frame(ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
+df_2017 <- data.frame(ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
 
 colnames(df_2013) <- new_col_names
 colnames(df_2014) <- new_col_names
@@ -657,24 +661,7 @@ df_2017_90p <- df_2017
 mask <- rast("data/work/mask_99p.tif")
 
 # Mask and Mean
-# EVI
-evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
-evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
-evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
-evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
-evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
 
-evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
-evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
-evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
-evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
-evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
-
-evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
-evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
-evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
-evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
-evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NDVI
 ndvi_2013_bro_mean <- mask_mean(ndvi_2013, mask[[1]])
@@ -694,6 +681,25 @@ ndvi_2014_mix_mean <- mask_mean(ndvi_2014, mask[[3]])
 ndvi_2015_mix_mean <- mask_mean(ndvi_2015, mask[[3]])
 ndvi_2016_mix_mean <- mask_mean(ndvi_2016, mask[[3]])
 ndvi_2017_mix_mean <- mask_mean(ndvi_2017, mask[[3]])
+
+# EVI
+evi_2013_bro_mean <- mask_mean(evi_2013, mask[[1]])
+evi_2014_bro_mean <- mask_mean(evi_2014, mask[[1]])
+evi_2015_bro_mean <- mask_mean(evi_2015, mask[[1]])
+evi_2016_bro_mean <- mask_mean(evi_2016, mask[[1]])
+evi_2017_bro_mean <- mask_mean(evi_2017, mask[[1]])
+
+evi_2013_con_mean <- mask_mean(evi_2013, mask[[2]])
+evi_2014_con_mean <- mask_mean(evi_2014, mask[[2]])
+evi_2015_con_mean <- mask_mean(evi_2015, mask[[2]])
+evi_2016_con_mean <- mask_mean(evi_2016, mask[[2]])
+evi_2017_con_mean <- mask_mean(evi_2017, mask[[2]])
+
+evi_2013_mix_mean <- mask_mean(evi_2013, mask[[3]])
+evi_2014_mix_mean <- mask_mean(evi_2014, mask[[3]])
+evi_2015_mix_mean <- mask_mean(evi_2015, mask[[3]])
+evi_2016_mix_mean <- mask_mean(evi_2016, mask[[3]])
+evi_2017_mix_mean <- mask_mean(evi_2017, mask[[3]])
 
 # NIRv
 nirv_2013_bro_mean <- mask_mean(nirv_2013, mask[[1]])
@@ -715,11 +721,11 @@ nirv_2016_mix_mean <- mask_mean(nirv_2016, mask[[3]])
 nirv_2017_mix_mean <- mask_mean(nirv_2017, mask[[3]])
 
 # Create the dataframes 
-df_2013 <- data.frame(evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
-df_2014 <- data.frame(evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
-df_2015 <- data.frame(evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
-df_2016 <- data.frame(evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
-df_2017 <- data.frame(evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
+df_2013 <- data.frame(ndvi_2013_bro_mean, ndvi_2013_con_mean, ndvi_2013_mix_mean, evi_2013_bro_mean, evi_2013_con_mean, evi_2013_mix_mean, nirv_2013_bro_mean, nirv_2013_con_mean, nirv_2013_mix_mean)
+df_2014 <- data.frame(ndvi_2014_bro_mean, ndvi_2014_con_mean, ndvi_2014_mix_mean, evi_2014_bro_mean, evi_2014_con_mean, evi_2014_mix_mean, nirv_2014_bro_mean, nirv_2014_con_mean, nirv_2014_mix_mean)
+df_2015 <- data.frame(ndvi_2015_bro_mean, ndvi_2015_con_mean, ndvi_2015_mix_mean, evi_2015_bro_mean, evi_2015_con_mean, evi_2015_mix_mean, nirv_2015_bro_mean, nirv_2015_con_mean, nirv_2015_mix_mean)
+df_2016 <- data.frame(ndvi_2016_bro_mean, ndvi_2016_con_mean, ndvi_2016_mix_mean, evi_2016_bro_mean, evi_2016_con_mean, evi_2016_mix_mean, nirv_2016_bro_mean, nirv_2016_con_mean, nirv_2016_mix_mean)
+df_2017 <- data.frame(ndvi_2017_bro_mean, ndvi_2017_con_mean, ndvi_2017_mix_mean, evi_2017_bro_mean, evi_2017_con_mean, evi_2017_mix_mean, nirv_2017_bro_mean, nirv_2017_con_mean, nirv_2017_mix_mean)
 
 colnames(df_2013) <- new_col_names
 colnames(df_2014) <- new_col_names
@@ -747,12 +753,12 @@ df_2015_combined <- cbind(df_2015_30p, df_2015_50p, df_2015_66p, df_2015_70p, df
 df_2016_combined <- cbind(df_2016_30p, df_2016_50p, df_2016_66p, df_2016_70p, df_2016_90p, df_2016_99p)
 df_2017_combined <- cbind(df_2017_30p, df_2017_50p, df_2017_66p, df_2017_70p, df_2017_90p, df_2017_99p)
 
-newcolnames <- c("EVI_Broad_30p","EVI_Conifer_30p", "EVI_Mixed_30p", "NDVI_Broad_30p","NDVI_Conifer_30p", "NDVI_Mixed_30p", "NIRv_Broad_30p", "NIRv_Conifer_30p", "NIRv_Mixed_30p",
-                 "EVI_Broad_50p","EVI_Conifer_50p", "EVI_Mixed_50p", "NDVI_Broad_50p","NDVI_Conifer_50p", "NDVI_Mixed_50p", "NIRv_Broad_50p", "NIRv_Conifer_50p", "NIRv_Mixed_50p",
-                 "EVI_Broad_66p","EVI_Conifer_66p", "EVI_Mixed_66p", "NDVI_Broad_66p","NDVI_Conifer_66p", "NDVI_Mixed_66p", "NIRv_Broad_66p", "NIRv_Conifer_66p", "NIRv_Mixed_66p",
-                 "EVI_Broad_70p","EVI_Conifer_70p", "EVI_Mixed_70p", "NDVI_Broad_70p","NDVI_Conifer_70p", "NDVI_Mixed_70p", "NIRv_Broad_70p", "NIRv_Conifer_70p", "NIRv_Mixed_70p",
-                 "EVI_Broad_90p","EVI_Conifer_90p", "EVI_Mixed_90p", "NDVI_Broad_90p","NDVI_Conifer_90p", "NDVI_Mixed_90p", "NIRv_Broad_90p", "NIRv_Conifer_90p", "NIRv_Mixed_90p",
-                 "EVI_Broad_99p","EVI_Conifer_99p", "EVI_Mixed_99p", "NDVI_Broad_99p","NDVI_Conifer_99p", "NDVI_Mixed_99p", "NIRv_Broad_99p", "NIRv_Conifer_99p", "NIRv_Mixed_99p")
+newcolnames <- c("NDVI_Broad_30p","NDVI_Conifer_30p", "NDVI_Mixed_30p", "EVI_Broad_30p","EVI_Conifer_30p", "EVI_Mixed_30p", "NIRv_Broad_30p", "NIRv_Conifer_30p", "NIRv_Mixed_30p",
+                 "NDVI_Broad_50p","NDVI_Conifer_50p", "NDVI_Mixed_50p", "EVI_Broad_50p","EVI_Conifer_50p", "EVI_Mixed_50p", "NIRv_Broad_50p", "NIRv_Conifer_50p", "NIRv_Mixed_50p",
+                 "NDVI_Broad_66p","NDVI_Conifer_66p", "NDVI_Mixed_66p", "EVI_Broad_66p","EVI_Conifer_66p", "EVI_Mixed_66p", "NIRv_Broad_66p", "NIRv_Conifer_66p", "NIRv_Mixed_66p",
+                 "NDVI_Broad_70p","NDVI_Conifer_70p", "NDVI_Mixed_70p", "EVI_Broad_70p","EVI_Conifer_70p", "EVI_Mixed_70p", "NIRv_Broad_70p", "NIRv_Conifer_70p", "NIRv_Mixed_70p",
+                 "NDVI_Broad_90p","NDVI_Conifer_90p", "NDVI_Mixed_90p", "EVI_Broad_90p","EVI_Conifer_90p", "EVI_Mixed_90p", "NIRv_Broad_90p", "NIRv_Conifer_90p", "NIRv_Mixed_90p",
+                 "NDVI_Broad_99p","NDVI_Conifer_99p", "NDVI_Mixed_99p", "EVI_Broad_99p","EVI_Conifer_99p", "EVI_Mixed_99p", "NIRv_Broad_99p", "NIRv_Conifer_99p", "NIRv_Mixed_99p")
 
 colnames(df_2013_combined) <- newcolnames
 colnames(df_2014_combined) <- newcolnames
