@@ -205,9 +205,33 @@ NDVI, EVI, NIRv
 - Berechnen von Differenzwerten (Mittelwert des Untersuchungszeitraum - Mittelwert der Referenzperiode)
 - Mittelwertsabweichung des jeweiligen Index je Monat des Untersuchungszeitraum vom Mittelwert dieses Monat über die Referenzperiode
 
+**`02.5_harmonsing_differences.R`**
 
+📦 Pakete:
 
+- `dplyr`
+- `terra`
 
+📥 Eingangsdaten:
+
+- `df_differences.RData`
+- `data/work/reference/indices`
+- `mask_30p.tif`
+- `mask_50p.tif`
+- `mask_66p.tif`
+- `mask_70p.tif`
+- `mask_90p.tif`
+- `mask_99p.tif`
+
+📤 Ausgangsdaten:
+
+- `df_ranges.RData`
+- `df_differences_harmonised.RData`
+
+🧾 Zweck:
+
+- Ermitteln der Wertespannen der monatlichen Index-Mittelwerte (maskiert) der Referenzperiode (Abstand zwischen Mininum- und Maximumwert des Monats)
+- Umrechnen der in `02.4_create_dataframes_from_masked_indices` ermittelten Differenzen in Prozentwerte von jeweiliger Wertespanne
 
 
 
