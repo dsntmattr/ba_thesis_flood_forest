@@ -787,6 +787,6 @@ row.names(df_differences) <- c("13/05", "13/06", "13/07", "13/08", "13/09",
                                "16/05", "16/06", "16/07", "16/08", "16/09",
                                "17/05", "17/06", "17/07", "17/08", "17/09")
 
-df_differences$datetimes <- row.names(df_differences)
+#df_differences$datetimes <- row.names(df_differences)
 
 save(df_differences, file = "data/work/df_differences.RData")
