@@ -126,7 +126,7 @@ NDVI, EVI, NIRv
 
 🧾 Zweck:
 
-- Suchen von MODIS Überfliegungsdaten (*MODIS Nadir BRDF-Adjusted Reflectance (NBAR) Daily*) für die Monate Mai bis September der Jahre           2000 bis 2012 (Referenzzeitraum) und 2013 bis 2017 (Untersuchungszeitraum) im Untersuchungsgebiet
+- Suchen von MODIS Überfliegungsdaten (*MODIS Nadir BRDF-Adjusted Reflectance (NBAR) Daily*) für die Monate Mai bis September der Jahre 2000 bis 2012 (Referenzzeitraum) und 2013 bis 2017 (Untersuchungszeitraum) im Untersuchungsgebiet
 - Auswahl der benötigen Bänder (blue, red und nir)
 - Zusammenfassen der täglichen Aufnahmen zu je einem Bild pro Monat und dem Mittelwert aus allen Bildern dieses Monats
 - Zuschneiden der Bilder auf die Ausdehnung des Untersuchungsgebietes
@@ -233,8 +233,32 @@ NDVI, EVI, NIRv
 - Ermitteln der Wertespannen der monatlichen Index-Mittelwerte (maskiert) der Referenzperiode (Abstand zwischen Mininum- und Maximumwert des Monats)
 - Umrechnen der in `02.4_create_dataframes_from_masked_indices` ermittelten Differenzen in Prozentwerte von jeweiliger Wertespanne
 
+**`03.1_get_lai_aggregate_P8D_P1M_QA.R`**
 
+📦 Pakete: 
 
+- `gdalcubes`
+- `sf`        
+- `rstac`       
+- `magrittr`
+
+📥 Eingangsdaten:
+
+- `data/work/bbox.vector.RData`
+
+📤 Ausgangsdaten:
+
+- `data/work/reference/lai/P1M/`
+- `data/work/study/lai/P1M/`
+
+🧾 Zweck:
+
+- Suchen von MODIS LAI 500m 8-day (*MODIS Leaf Area Index 8-Day*) für die Monate Mai bis September der Jahre 2003 bis 2012 (Referenzzeitraum) und 2013 bis 2017 (Untersuchungszeitraum) im Untersuchungsgebiet
+- Auswahl der benötigen Bänder ("Lai_500m", "FparLai_QC", "FparExtra_QC")
+- Zusammenfassen der täglichen Aufnahmen zu je einem Bild pro Monat und dem Mittelwert aus   allen Bildern dieses Monats
+- Zuschneiden der Bilder auf die Ausdehnung des Untersuchungsgebietes
+- Reskalieren der Pixelwerte des LAI-Bandes auf LAI-Wertebereich (0 bis 7)durch Multiplikation mit 0.1
+- Speichern der Monatsbilder als .tif
 
 
 
