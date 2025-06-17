@@ -65,7 +65,7 @@ get_data = function(aoi, toi, out, pre) {
   ## make a cube a mask bad pixels with the two quality bands
   cube = raster_cube(collection, v, mask = image_mask("FparLai_QC", values = 0, invert = TRUE)) |>
     filter_pixel("FparExtra_QC == 0") |>
-    apply_pixel(c("Lai_500m * 0.1", "FparLai_QC", "FparExtra_QC"), c("x1_lai500", "x2_qa", "x3_qa_extra"))
+    apply_pixel(c("Lai_500m * 0.1"), c("x1"))
   
   cube_monthly = aggregate_time(cube, dt = "P1M", method = "mean")
   
@@ -75,7 +75,7 @@ get_data = function(aoi, toi, out, pre) {
 }
   
 # Variables
-load("data/work/bbox.vector.RData")
+load("data/work/aoi/bbox.vector.RData")
 aoi   <- bbox.vector
 pre <- "LAI_"
 
@@ -83,30 +83,36 @@ pre <- "LAI_"
 # Get the data. -----------------------------------------------------------
 # Reference.
 # Create vector with all TOIs of the reference period.
-toi_vec <- paste0(2003:2012, "-05-01/", 2013:2017, "-09-30")
+years <- 2003:2012
+toi_vec <- paste0(years, "-05-01/", years, "-09-30")
 
-out <- "data/work/reference/lai/P1M/"
+out <- "data/work/reference/lai/qc1-0_qc2-0/p1m"
 
 for (toi in toi_vec) {
   get_data(aoi, toi = toi, out, pre)
 }
+
+# Remove trash.
+trash <- list.files(out, pattern = "10-01", full.names = TRUE)
+file.remove(trash)
 
 # Study period.
-out <- "data/work/study/lai/P1M/"
+out <- "data/work/study/lai/qc1-0_qc2-0/p1m"
 
 # Create vector with all TOIs of the study period.
-toi_vec <- paste0(2013:2017, "-05-01/", 2013:2017, "-09-30")
+years <- 2013:2017
+toi_vec <- paste0(years, "-05-01/", years, "-09-30")
 
 for (toi in toi_vec) {
   get_data(aoi, toi = toi, out, pre)
 }
 
-# trash --------------------------------------------
-trash <- list.files("data/work/reference/lai/P1M", pattern = "10-01", full.names = TRUE)
+# Remove trash.
+trash <- list.files(out, pattern = "10-01", full.names = TRUE)
 file.remove(trash)
-trash <- list.files("data/work/study/lai/P1M", pattern = "10-01", full.names = TRUE)
-file.remove(trash)
-trash <- list.files("data/work/reference/lai/P1M", pattern = ".aux", full.names = TRUE)
-file.remove(trash)
-trash <- list.files("data/work/study/lai/P1M", pattern = ".aux", full.names = TRUE)
-file.remove(trash)
+
+# more trash --------------------------------------------
+#trash <- list.files("data/work/reference/lai/P1M", pattern = ".aux", full.names = TRUE)
+#file.remove(trash)
+#trash <- list.files("data/work/study/lai/P1M", pattern = ".aux", full.names = TRUE)
+#file.remove(trash)
