@@ -64,7 +64,7 @@ get_data = function(aoi, toi, out, pre) {
   
   ## make a cube a mask bad pixels with the two quality bands
   cube = raster_cube(collection, v, mask = image_mask("FparLai_QC", values = 0, invert = TRUE)) |>
-    filter_pixel("FparExtra_QC == 0") |>
+    # filter_pixel("FparExtra_QC == 0") |>
     apply_pixel(c("Lai_500m * 0.1"), c("x1"))
   
   cube_monthly = aggregate_time(cube, dt = "P1M", method = "mean")
@@ -86,7 +86,7 @@ pre <- "LAI_"
 years <- 2003:2012
 toi_vec <- paste0(years, "-05-01/", years, "-09-30")
 
-out <- "data/work/reference/lai/qc1-0_qc2-0/p1m"
+out <- "data/work/reference/lai/no_qa/p1m"
 
 for (toi in toi_vec) {
   get_data(aoi, toi = toi, out, pre)
@@ -97,7 +97,7 @@ trash <- list.files(out, pattern = "10-01", full.names = TRUE)
 file.remove(trash)
 
 # Study period.
-out <- "data/work/study/lai/qc1-0_qc2-0/p1m"
+out <- "data/work/study/lai/no_qa/p1m"
 
 # Create vector with all TOIs of the study period.
 years <- 2013:2017

@@ -4,7 +4,7 @@
 library(gdalcubes)   # raster cubes
 
 # Get the paths.
-path = "data/work/reference/lai/qc1-0_qc2-0/p1m"
+path = "data/work/reference/lai/no_qa/p1m"
 
 paths_05 <- list.files(path = path, pattern = "-05-", full.names = TRUE)
 paths_06 <- list.files(path = path, pattern = "-06-", full.names = TRUE)
@@ -30,7 +30,7 @@ cube_09_P13Y <- reduce_time(cube_09, "mean(x1)")
 
 # Save the pictures.
 prefix <-  "LAI_"
-dir <- "data/work/reference/lai/qc1-0_qc2-0/p13y/"
+dir <- "data/work/reference/lai/no_qa/p13y/"
 
 write_tif(cube_05_P13Y, dir = dir, prefix = prefix)
 write_tif(cube_06_P13Y, dir = dir, prefix = prefix)
