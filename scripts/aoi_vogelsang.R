@@ -3,7 +3,9 @@
 library(sf)
 library(terra)
 library(ggplot2)
+library(patchwork)
 library(dplyr)
+library(tidyr)
 # Spatial data
 library(gdalcubes)   # raster cubes
 
@@ -55,16 +57,13 @@ ranger = function(cube, sf) {
   
 }
 
-
 ndvi_ranges <- ranger(cube_ndvi, sf)
 evi_ranges <- ranger(cube_evi, sf)
 nirv_ranges <- ranger(cube_nirv, sf)
 
-
 # Combine the ranges
 df_ranges <- data.frame(ndvi = ndvi_ranges, evi = evi_ranges, irv = nirv_ranges)
                         
-
 # extracing cubes values by polygon
 ref_ndvi_means <- extract_geom(cube_ndvi, sf, FUN = mean)
 ref_evi_means <- extract_geom(cube_evi, sf, FUN = mean)
@@ -106,7 +105,6 @@ new_rows <- c("13/05", "13/06", "13/07", "13/08", "13/09",
               "16/05", "16/06", "16/07", "16/08", "16/09",
               "17/05", "17/06", "17/07", "17/08", "17/09")
 
-
 row.names(df_differences) <- new_rows
 
 # Differences raw.
@@ -136,34 +134,45 @@ row.names(df_nirv_harm) <- new_rows
 # plotting
 # Idee: bei dem kleinen Gebiet nicht auf Waldtypen eingehen da so kleine Gebiete, beim großen dann aber?
 
-
 df <- df_ndvi_harm
 
 plot_ndvi <- ggplot(df, aes(x = rownames(df))) +
   geom_point(aes(y = dif, colour = "dif")) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  labs(title = "NDVI", x = "Datetimes YY/MM", y = "Differences", color = "Coverage")
+  labs(title = "NDVI", x = "Datetimes YY/MM", y = "Differences", color = "Coverage") +
+  ylim(-260, 10)
 plot_ndvi
 
 df <- df_evi_harm
 plot_evi <- ggplot(df, aes(x = rownames(df))) +
   geom_point(aes(y = dif, colour = "dif")) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  labs(title = "EVI", x = "Datetimes YY/MM", y = "Differences", color = "Coverage")
+  labs(title = "EVI", x = "Datetimes YY/MM", y = "Differences", color = "Coverage") +
+  ylim(-260, 10)
 plot_evi
 
 df <- df_nirv_harm
 plot_nirv <- ggplot(df, aes(x = rownames(df))) +
   geom_point(aes(y = dif, colour = "dif")) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  labs(title = "nirv", x = "Datetimes YY/MM", y = "Differences", color = "Coverage")
+  labs(title = "nirv", x = "Datetimes YY/MM", y = "Differences", color = "Coverage") +
+  ylim(-260, 10)
 plot_nirv
 
-
-
-
-library(patchwork)
 plot_ndvi / plot_evi / plot_nirv  # untereinander
 # oder plot_ndvi + plot_evi + plot_nirv  # nebeneinander
 
+# All in one
 
+df <- bind_cols(df_ndvi_harm, df_evi_harm, df_nirv_harm)
+colnames(df) <- c("NDVI", "EVI", "NIRv")
+
+df_long <- df %>%
+  pivot_longer(
+    cols = c(NDVI, EVI, NIRv),
+    names_to = "Serie",
+    values_to = "Difference"
+  )
+
+# all Zeitpunkte einfügen
+rownames(df_long) <- 
