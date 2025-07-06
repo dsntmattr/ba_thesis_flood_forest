@@ -1,21 +1,15 @@
-library(ggplot2)
 # Packages. ---------------------------------------------------------------
 library(ggplot2)
 library(lubridate)
 library(dplyr)
 theme_set(theme_linedraw())
 
+# Each plot in new window.  ----------------------------------------
+#dev.off()
 
 # Vogelsang. --------------------------------------------------------------
-
-
 load("data/work/dataframes/df_diff_harm_long_vogelsang.RData")
-
 df <- df_differences_harmonised_long
-
-# Each plot in new window.  ----------------------------------------
-dev.new()
-
 
 # One plot per graph, on one page. ----------------------------------------
 ggplot(df, aes(x = date, y = difference)) +
@@ -30,22 +24,19 @@ ggplot(df, aes(x = date, y = difference)) +
   ) +
   scale_x_date(
     breaks = unique(df$date),
-    labels = format(brks, "%b %Y")
+    labels = brks <- unique(df$date)  # Definiere brks vor der Verwendung
+
   ) +
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, size = 7),
     panel.grid.minor = element_blank()
   )
 
-# All graphs in one plot,  -------------------------------------------------
-# no line in non studied months,
-# difference line types per index,
-# not studied months are not shown on x axis.
+# All graphs in one plot. -------------------------------------------------
 df_grouped <- df %>%
   mutate(
     year = as.numeric(format(date, "%Y"))
   )
-
 
 df_grouped$MonthYear <- format(df_grouped$date, "%Y-%m")
 
@@ -58,7 +49,7 @@ ggplot(df_grouped, aes(
 )) +
   geom_line(size = 1) +
   labs(
-    title = "Zeitverlauf Vegetationsindizes",
+    title = "Zeitverlauf Vegetationsindizes Vogelsang",
     subtitle = "Mai–September 2013–2017",
     x = "Monat",
     y = "Abweichung in % von Wertespanne der Referenzperiode",
@@ -71,6 +62,86 @@ ggplot(df_grouped, aes(
     axis.text.x = element_text(angle = 90, vjust = 0.5, size = 7),
     panel.grid.minor = element_blank()
   )
+
+# Compare indices for each forest type ------------------------------------------------------------------
+load("data/work/dataframes/df_dif_har_66p_long.RData")
+df <- df_dif_har_66p_long
+
+df_grouped <- df %>%
+  mutate(
+    year = as.numeric(format(date, "%Y"))
+  )
+
+df_grouped$MonthYear <- format(df_grouped$date, "%Y-%m")
+
+df_grouped %>%
+  group_by(Vegetation) %>%
+  do(
+    p = ggplot(data = ., aes(
+      x = MonthYear,
+      y = value,
+      color = Index,
+      linetype = Index,
+      group = interaction(Index, year)
+    )) +
+      geom_line(size = 1) +
+      geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+      labs(
+        title = paste("Vergleich der Indices für Waldtyp:", unique(.$Vegetation)),
+        x = "Monat",
+        y = "Abweichung in %",
+        color = "Index",
+        linetype = "Index"
+      ) +
+      theme_minimal() +
+      theme(
+        axis.text.x = element_text(angle = 90, vjust = 0.5, size = 7),
+        panel.grid.minor = element_blank()
+      )
+  ) -> plots_by_vegetation
+
+# plots_by_vegetation$p enthält dann eine Liste mit Plots, z.B.:
+plots_by_vegetation$p[[1]]  # erster Waldtyp
+plots_by_vegetation$p[[2]]  # zweiter Waldtyp
+plots_by_vegetation$p[[3]]  # zweiter Waldtyp
+# etc.
+
+# Compare one index for all forest types
+index_to_plot <- "NIRv"  # Beispiel: IndexType, den du anschauen willst
+
+df_filtered <- df_grouped %>%
+  filter(Index == index_to_plot)
+
+ggplot(df_filtered, aes(
+  x = MonthYear,
+  y = value,
+  color = Vegetation,
+  group = interaction(Vegetation, year)
+)) +
+  geom_line(size = 1) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  labs(
+    title = paste("Vergleich von", index_to_plot, "bei allen Waldtypen"),
+    x = "Monat",
+    y = "Abweichung in %",
+    color = "Waldtyp"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, size = 7),
+    panel.grid.minor = element_blank()
+  )
+
+
+
+
+
+
+
+
+
+
+
 
 
 # One plot per index. -----------------------------------------------------
@@ -107,9 +178,7 @@ plot_ndvi / plot_evi / plot_nirv  # untereinander
 # oder plot_ndvi + plot_evi + plot_nirv  # nebeneinander
 
 # LAI ---------------------------------------------------------------------
-
 # Vergleich der Plots zwischen LAI Q1Q2 und LAi Q1
-
 # QA1QA2
 
 df <- df_lai_differences

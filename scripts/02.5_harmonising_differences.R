@@ -3,6 +3,7 @@
 # Packages ----------------------------------------------------------------
 library(terra)     # raster
 library(dplyr)
+library(tidyr)
 
 
 # Loading data. -----------------------------------------------------------
@@ -262,3 +263,32 @@ df_differences_harmonised <- bind_rows(df_dif_2013_harmonised, df_dif_2014_harmo
 
 save(df_ranges, file ="data/work/dataframes/df_ranges.RData")
 save(df_differences_harmonised, file = "data/work/dataframes/df_differences_harmonised.RData")
+
+##################################################################################################
+##################################################################################################
+# test for pivot_longer
+
+load("data/work/dataframes/df_differences_harmonised.RData")
+
+# Stack the cubes, one cubes for each month over the whole reference period.
+datetime_values = c("2013-05-01", "2013-06-01", "2013-07-01", "2013-08-01", "2013-09-01",
+                    "2014-05-01", "2014-06-01", "2014-07-01", "2014-08-01", "2014-09-01",
+                    "2015-05-01", "2015-06-01", "2015-07-01", "2015-08-01", "2015-09-01",
+                    "2016-05-01", "2016-06-01", "2016-07-01", "2016-08-01", "2016-09-01",
+                    "2017-05-01", "2017-06-01", "2017-07-01", "2017-08-01", "2017-09-01")
+
+df_differences_harmonised$date <- as.Date(paste0(datetime_values))
+
+df_dif_har_66p <- df_differences_harmonised %>% 
+  select(date, contains("66"))
+  
+  
+df_dif_har_66p_long <- df_dif_har_66p %>%
+  pivot_longer(
+    cols = -date,
+    names_to = c("Index", "Vegetation", "Percentile"),
+    names_sep = "_",
+    values_to = "value"
+  )
+
+save(df_dif_har_66p_long, file = "data/work/dataframes/df_dif_har_66p_long.RData")
