@@ -7,7 +7,7 @@ library(dplyr)
 
 # Loading data. -----------------------------------------------------------
 # Loading the differences.
-load("data/work/df_differences.RData")
+load("data/work/dataframes/df_differences.RData")
 
 
 # Loading the indices.
@@ -15,14 +15,14 @@ ndvi <- rast(list.files(path = "data/work/reference/indices", pattern = "NDVI", 
 evi <- rast(list.files(path = "data/work/reference/indices", pattern = "EVI", full.names = TRUE))
 nirv <- rast(list.files(path = "data/work/reference/indices", pattern = "NIRv", full.names = TRUE))
 
-# Create function to get ranges
+# Create function to get ranges  -----------------------------------------------------------
 
 ranger = function(x) {
   range <- global(x, "max", na.rm = TRUE) - global(x, "min", na.rm = TRUE)
 }
 
-# 30 percent pixel coverage ---------------------------------------------
-mask <- rast("data/work/mask_30p.tif")
+# 30p ---------------------------------------------
+mask <- rast("data/work/mask/mask_30p.tif")
 
 ndvi_bro <- mask(ndvi, mask[[1]])
 ndvi_con <- mask(ndvi, mask[[2]])
@@ -56,8 +56,8 @@ ranges <- data.frame(range_ndvi_bro, range_ndvi_con, range_ndvi_mix,
 
 ranges_30p <- ranges
 
-# 50p
-mask <- rast("data/work/mask_50p.tif")
+# 50p  ---------------------------------------------
+mask <- rast("data/work/mask/mask_50p.tif")
 
 ndvi_bro <- mask(ndvi, mask[[1]])
 ndvi_con <- mask(ndvi, mask[[2]])
@@ -91,8 +91,8 @@ ranges <- data.frame(range_ndvi_bro, range_ndvi_con, range_ndvi_mix,
 
 ranges_50p <- ranges
 
-# 66p
-mask <- rast("data/work/mask_66p.tif")
+# 66p  ---------------------------------------------
+mask <- rast("data/work/mask/mask_66p.tif")
 
 ndvi_bro <- mask(ndvi, mask[[1]])
 ndvi_con <- mask(ndvi, mask[[2]])
@@ -126,8 +126,8 @@ ranges <- data.frame(range_ndvi_bro, range_ndvi_con, range_ndvi_mix,
 
 ranges_66p <- ranges
 
-# 70p
-mask <- rast("data/work/mask_70p.tif")
+# 70p  ---------------------------------------------
+mask <- rast("data/work/mask/mask_70p.tif")
 
 ndvi_bro <- mask(ndvi, mask[[1]])
 ndvi_con <- mask(ndvi, mask[[2]])
@@ -161,8 +161,8 @@ ranges <- data.frame(range_ndvi_bro, range_ndvi_con, range_ndvi_mix,
 
 ranges_70p <- ranges
 
-# 90p
-mask <- rast("data/work/mask_90p.tif")
+# 90p  ---------------------------------------------
+mask <- rast("data/work/mask/mask_90p.tif")
 
 ndvi_bro <- mask(ndvi, mask[[1]])
 ndvi_con <- mask(ndvi, mask[[2]])
@@ -196,8 +196,8 @@ ranges <- data.frame(range_ndvi_bro, range_ndvi_con, range_ndvi_mix,
 
 ranges_90p <- ranges
 
-# 99p
-mask <- rast("data/work/mask_99p.tif")
+# 99p  ---------------------------------------------
+mask <- rast("data/work/mask/mask_99p.tif")
 
 ndvi_bro <- mask(ndvi, mask[[1]])
 ndvi_con <- mask(ndvi, mask[[2]])
@@ -243,7 +243,8 @@ colnames(df_ranges) <- c("NDVI_Broad_30p","NDVI_Conifer_30p", "NDVI_Mixed_30p", 
                                   "NDVI_Broad_99p","NDVI_Conifer_99p", "NDVI_Mixed_99p", "EVI_Broad_99p","EVI_Conifer_99p", "EVI_Mixed_99p", "NIRv_Broad_99p", "NIRv_Conifer_99p", "NIRv_Mixed_99p")
 
 
-# Differences raw.
+# Harmonising -------------------------------------------------------------
+
 # Slice for each years.
 df_dif_2013 <- slice(df_differences, 1:5)
 df_dif_2014 <- slice(df_differences, 6:10)
@@ -259,5 +260,5 @@ df_dif_2017_harmonised <- (df_dif_2017/df_ranges)*100
 
 df_differences_harmonised <- bind_rows(df_dif_2013_harmonised, df_dif_2014_harmonised, df_dif_2015_harmonised, df_dif_2016_harmonised, df_dif_2017_harmonised)
 
-save(df_ranges, file ="data/work/df_ranges.RData")
-save(df_differences_harmonised, file = "data/work/df_differences_harmonised.RData")
+save(df_ranges, file ="data/work/dataframes/df_ranges.RData")
+save(df_differences_harmonised, file = "data/work/dataframes/df_differences_harmonised.RData")
