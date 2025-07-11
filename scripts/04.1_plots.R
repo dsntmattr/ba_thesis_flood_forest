@@ -11,28 +11,28 @@ theme_set(theme_linedraw())
 load("data/work/dataframes/df_diff_harm_long_vogelsang.RData")
 df <- df_differences_harmonised_long
 
-# One plot per graph, on one page. ----------------------------------------
-ggplot(df, aes(x = date, y = difference)) +
-  geom_line(color = "#2C3E50") +
-  facet_wrap(~index, ncol = 1, scales = "free_y") +  # je ein Panel pro Variable
-  labs(
-    title = "Zeitverlauf Vegetationsindizes",
-    subtitle = "Mai–September 2013–2017",
-    x = "Datum",
-    y = "Indexwert",
-    caption = "Quelle: Satellitendaten"
-  ) +
-  scale_x_date(
-    breaks = unique(df$date),
-    labels = brks <- unique(df$date)  # Definiere brks vor der Verwendung
-
-  ) +
-  theme(
-    axis.text.x = element_text(angle = 90, vjust = 0.5, size = 7),
-    panel.grid.minor = element_blank()
-  )
-
-# All graphs in one plot. -------------------------------------------------
+# One plot per graph, on one page.
+#ggplot(df, aes(x = date, y = difference)) +
+#  geom_line(color = "#2C3E50") +
+#  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+#  facet_wrap(~index, ncol = 1, scales = "free_y") +  # je ein Panel pro Variable
+#  labs(
+#    title = "Zeitverlauf Vegetationsindizes",
+#    subtitle = "Mai–September 2013–2017",
+#    x = "Datum",
+#    y = "Indexwert",
+#    caption = "Quelle: Satellitendaten"
+#  ) +
+#  scale_x_date(
+#    breaks = unique(df$date),
+#    labels = brks <- unique(df$date)  # Definiere brks vor der Verwendung
+#  ) +
+#  theme(
+#    axis.text.x = element_text(angle = 90, vjust = 0.5, size = 7),
+#    panel.grid.minor = element_blank()
+#  )
+#
+# All graphs in one plot.
 df_grouped <- df %>%
   mutate(
     year = as.numeric(format(date, "%Y"))
@@ -40,7 +40,7 @@ df_grouped <- df %>%
 
 df_grouped$MonthYear <- format(df_grouped$date, "%Y-%m")
 
-ggplot(df_grouped, aes(
+plot <- ggplot(df_grouped, aes(
   x = MonthYear,
   y = difference,
   color = index,
@@ -48,6 +48,8 @@ ggplot(df_grouped, aes(
   group = interaction(index, year)
 )) +
   geom_line(size = 1) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  ylim(-300, 100) + 
   labs(
     title = "Zeitverlauf Vegetationsindizes Vogelsang",
     subtitle = "Mai–September 2013–2017",
@@ -55,7 +57,7 @@ ggplot(df_grouped, aes(
     y = "Abweichung in % von Wertespanne der Referenzperiode",
     color = "Index",
     linetype = "Index",
-    caption = "Quelle: Satellitendaten"
+    caption = "Quelle: MODIS NBAR Daily"
   ) +
   theme_minimal() +
   theme(
@@ -63,16 +65,29 @@ ggplot(df_grouped, aes(
     panel.grid.minor = element_blank()
   )
 
-# Compare indices for each forest type ------------------------------------------------------------------
+plot
+
+ggsave("data/final/plots/vogelsang.png", plot = plot, bg = "white")
+
+# Whole study area. -------------------------------------------------------
+# Compare indices for each forest type
 load("data/work/dataframes/df_dif_har_66p_long.RData")
 df <- df_dif_har_66p_long
 
+# Remove forest type "Mixed"
+
+df <- df %>% 
+  filter (Vegetation != "Mixed")
+
+# Grou df
 df_grouped <- df %>%
   mutate(
     year = as.numeric(format(date, "%Y"))
   )
 
 df_grouped$MonthYear <- format(df_grouped$date, "%Y-%m")
+
+# Specify the plot
 
 df_grouped %>%
   group_by(Vegetation) %>%
@@ -86,12 +101,14 @@ df_grouped %>%
     )) +
       geom_line(size = 1) +
       geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+      ylim(-100, 50) +
       labs(
-        title = paste("Vergleich der Indices für Waldtyp:", unique(.$Vegetation)),
+        title = paste("Vergleich der Indizes für Waldtyp:", unique(.$Vegetation)),
         x = "Monat",
-        y = "Abweichung in %",
+        y = "Abweichung in % von Wertespanne der Referenzperiode",
         color = "Index",
-        linetype = "Index"
+        linetype = "Index",
+        caption = "Quelle: MODIS NBAR Daily"
       ) +
       theme_minimal() +
       theme(
@@ -103,34 +120,64 @@ df_grouped %>%
 # plots_by_vegetation$p enthält dann eine Liste mit Plots, z.B.:
 plots_by_vegetation$p[[1]]  # erster Waldtyp
 plots_by_vegetation$p[[2]]  # zweiter Waldtyp
-plots_by_vegetation$p[[3]]  # zweiter Waldtyp
+#plots_by_vegetation$p[[3]]  # zweiter Waldtyp
 # etc.
 
-# Compare one index for all forest types
+ggsave("data/final/plots/aoi_broad_no_mix.png", plot = plots_by_vegetation$p[[1]], bg = "white")
+ggsave("data/final/plots/aoi_conifer_no_mix.png", plot = plots_by_vegetation$p[[2]], bg = "white")
+#ggsave("data/final/plots/aoi_mixed.png", plot = plots_by_vegetation$p[[3]], bg = "white")
+
+# Compare one index for all forest type -----------------------------------
+
 index_to_plot <- "NIRv"  # Beispiel: IndexType, den du anschauen willst
 
 df_filtered <- df_grouped %>%
   filter(Index == index_to_plot)
 
-ggplot(df_filtered, aes(
+plot <- ggplot(df_filtered, aes(
   x = MonthYear,
   y = value,
   color = Vegetation,
+  linetype = Vegetation,
   group = interaction(Vegetation, year)
 )) +
   geom_line(size = 1) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  ylim(-100, 50) +
   labs(
     title = paste("Vergleich von", index_to_plot, "bei allen Waldtypen"),
     x = "Monat",
-    y = "Abweichung in %",
-    color = "Waldtyp"
+    y = "Abweichung in % von Wertespanne der Referenzperiode",
+    color = "Waldtyp",
+    linetype = "Waldtyp",
+    caption = "Quelle: MODIS NBAR Daily"
   ) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 90, vjust = 0.5, size = 7),
     panel.grid.minor = element_blank()
   )
+
+
+
+ggsave("data/final/plots/aoi_nirv_no_mix.png", plot = plot, bg = "white")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

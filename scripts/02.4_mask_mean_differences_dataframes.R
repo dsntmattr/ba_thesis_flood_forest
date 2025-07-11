@@ -799,6 +799,7 @@ row.names(df_differences) <- c("13/05", "13/06", "13/07", "13/08", "13/09",
 save(df_differences, file = "data/work/df_differences.RData")
 
 
+
 # Part 02 - LAI -----------------------------------------------------------
 
 

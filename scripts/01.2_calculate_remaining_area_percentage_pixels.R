@@ -7,12 +7,16 @@ library(terra)       # raster
 # Data manipulation and more.
 library(tidyverse)
 
+library(gdata)
+
+library(writexl)
+
 # Load data. --------------------------------------------------------------
 #  coverage layers.
-coverage <- rast("data/work/coverage.tif")
+coverage <- rast("data/work/mask/coverage.tif")
 
 # Load mask layer.
-paths <- list.files(path = "data/work", pattern = "mask" , full.names = TRUE)
+paths <- list.files(path = "data/work/mask", pattern = "mask" , full.names = TRUE)
 masks <- lapply(paths, rast)
 
 # Mask coverage by masks  ---------------------------------------------------------
@@ -80,6 +84,7 @@ colnames(df) <- c("Broad (ha)", "Conifer (ha)", "Mixed (ha)")
 
 df <- round(df)
 
+df_area_absolute <- df
 
 # Areas in percent. -------------------------------------------------------
 df_bro_perc <- data.frame(df$Broad/df$Broad[[1]]*100)
@@ -91,7 +96,7 @@ df_perc <- bind_cols(df_bro_perc, df_con_perc, df_mix_perc)
 row.names(df_perc) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
 colnames(df_perc) <- c("Broad (%)", "Conifer (%)", "Mixed (%)")
 
-df_perc <- round(df_perc)
+df_area_relative <- round(df_perc)
 
 # Number of cells. --------------------------------------------------------
 cells_coverage_bro <- sum(!is.na(values(coverage[[1]])))
@@ -128,6 +133,8 @@ df <- data.frame(vec_bro_cells, vec_con_cells, vec_mix_cells)
 row.names(df) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
 colnames(df) <- c("Broad (ncells)", "Conifer (ncells)", "Mixed (ncells)")
 
+df_pixels_absolute <- df
+
 # Percentage of cells.  --------------------------------------------------------
 df_bro_ncells_perc <- data.frame(df[1]/df[[1]][1]*100)
 df_con_ncells_perc <- data.frame(df[2]/df[[2]][1]*100)
@@ -139,3 +146,18 @@ row.names(df_perc) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
 colnames(df_perc) <- c("Broad (ncells%)", "Conifer (ncells%)", "Mixed (ncells%)")
 
 df_perc <- round(df_perc, digits = 1)
+
+df_pixels_relative <- df_perc
+
+keep(df_area_absolute,
+     df_area_relative,
+     df_pixels_absolute,
+     df_pixels_relative,
+     sure = TRUE)
+
+
+
+list <- list(df_area_absolute, df_area_relative, df_pixels_absolute, df_pixels_relative)
+
+write_xlsx(list, path = "data/final/remaining_area_and_pixels.xlsx")
+
