@@ -71,15 +71,10 @@ ggsave("data/final/plots/vogelsang.png", plot = plot, bg = "white")
 
 # Whole study area. -------------------------------------------------------
 # Compare indices for each forest type
-load("data/work/dataframes/df_dif_har_66p_long.RData")
-df <- df_dif_har_66p_long
+load("data/work/dataframes/df_differences_harmonised_long.RData")
+df <- df_differences_harmonised_long
 
-# Remove forest type "Mixed"
-
-df <- df %>% 
-  filter (Vegetation != "Mixed")
-
-# Grou df
+# Group df
 df_grouped <- df %>%
   mutate(
     year = as.numeric(format(date, "%Y"))
@@ -96,18 +91,18 @@ df_grouped %>%
       x = MonthYear,
       y = value,
       color = Index,
-      linetype = Index,
+      #linetype = Index,
       group = interaction(Index, year)
     )) +
-      geom_line(size = 1) +
+      geom_line(size = 0.5) +
       geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-      ylim(-100, 50) +
+      ylim(-30, 30) +
       labs(
         title = paste("Vergleich der Indizes für Waldtyp:", unique(.$Vegetation)),
         x = "Monat",
-        y = "Abweichung in % von Wertespanne der Referenzperiode",
+        y = "Abweichung in % von Referenzwert",
         color = "Index",
-        linetype = "Index",
+        #linetype = "Index",
         caption = "Quelle: MODIS NBAR Daily"
       ) +
       theme_minimal() +
@@ -123,7 +118,7 @@ plots_by_vegetation$p[[2]]  # zweiter Waldtyp
 #plots_by_vegetation$p[[3]]  # zweiter Waldtyp
 # etc.
 
-ggsave("data/final/plots/aoi_broad_no_mix.png", plot = plots_by_vegetation$p[[1]], bg = "white")
+ggsave("data/final/plots/aoi_broad.png", plot = plots_by_vegetation$p[[1]], bg = "white")
 ggsave("data/final/plots/aoi_conifer_no_mix.png", plot = plots_by_vegetation$p[[2]], bg = "white")
 #ggsave("data/final/plots/aoi_mixed.png", plot = plots_by_vegetation$p[[3]], bg = "white")
 
