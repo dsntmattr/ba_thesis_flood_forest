@@ -9,6 +9,8 @@ library(terra) # raster
 # Data manipulation and more.
 library(magrittr) # pipe operator %>%
 library(dplyr)
+library(gdata)
+library(tidyr)
 
 # Reference -------------------------------------------------------------
 
@@ -181,8 +183,59 @@ row.names(df_differences) <- c("13/05", "13/06", "13/07", "13/08", "13/09",
                                "16/05", "16/06", "16/07", "16/08", "16/09",
                                "17/05", "17/06", "17/07", "17/08", "17/09")
 
-#df_differences$datetimes <- row.names(df_differences)
 
 save(df_differences, file = "data/work/dataframes/df_differences.RData")
 
 
+# Harmosing ---------------------------------------------------------------
+# Cleaning the environment.
+keep(df_ref, 
+     df_differences, 
+     df_2013_differences, 
+     df_2014_differences,
+     df_2015_differences,
+     df_2016_differences,
+     df_2017_differences,
+     sure = TRUE)
+
+# Harmonsing the differences 
+df_2013_differences_harmonised <- (df_2013_differences / df_ref) * 100
+df_2014_differences_harmonised <- (df_2014_differences / df_ref) * 100
+df_2015_differences_harmonised <- (df_2015_differences / df_ref) * 100
+df_2016_differences_harmonised <- (df_2016_differences / df_ref) * 100
+df_2017_differences_harmonised <- (df_2017_differences / df_ref) * 100
+
+df_differences_harmonised <- bind_rows(df_2013_differences_harmonised,
+                                       df_2014_differences_harmonised,
+                                       df_2015_differences_harmonised,
+                                       df_2016_differences_harmonised,
+                                       df_2017_differences_harmonised)
+
+ row.names(df_differences_harmonised) <- c("13/05", "13/06", "13/07", "13/08", "13/09",
+                                           "14/05", "14/06", "14/07", "14/08", "14/09",
+                                           "15/05", "15/06", "15/07", "15/08", "15/09",
+                                           "16/05", "16/06", "16/07", "16/08", "16/09",
+                                           "17/05", "17/06", "17/07", "17/08", "17/09")
+ 
+ save(df_differences_harmonised, file = "data/work/dataframes/df_differences_harmonised.RData")
+ 
+ 
+ # Pivoting to longer (for better use in ggplot2).
+ datetime_values = c("2013-05-01", "2013-06-01", "2013-07-01", "2013-08-01", "2013-09-01",
+                     "2014-05-01", "2014-06-01", "2014-07-01", "2014-08-01", "2014-09-01",
+                     "2015-05-01", "2015-06-01", "2015-07-01", "2015-08-01", "2015-09-01",
+                     "2016-05-01", "2016-06-01", "2016-07-01", "2016-08-01", "2016-09-01",
+                     "2017-05-01", "2017-06-01", "2017-07-01", "2017-08-01", "2017-09-01")
+ 
+ df_differences_harmonised$date <- as.Date(paste0(datetime_values))
+ 
+ 
+ df_differences_harmonised_long <- df_differences_harmonised %>%
+   pivot_longer(
+     cols = -date,
+     names_to = c("Index", "Vegetation"),
+     names_sep = "_",
+     values_to = "value"
+   )
+ 
+ save(df_differences_harmonised_long, file = "data/work/dataframes/df_differences_harmonised_long.RData")
