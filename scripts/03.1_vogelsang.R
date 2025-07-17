@@ -27,48 +27,12 @@ cube_ndvi <- stack_cube(paths_ndvi, datetime_values = c("2000-05-01", "2000-06-0
 cube_evi <- stack_cube(paths_evi, datetime_values = c("2000-05-01", "2000-06-01", "2000-07-01", "2000-08-01", "2000-09-01"))
 cube_nirv <- stack_cube(paths_nirv, datetime_values = c("2000-05-01", "2000-06-01", "2000-07-01", "2000-08-01", "2000-09-01"))
 
-# Getting the ranges of each index per month
-
-ranger = function(cube, sf) {
-  vals <- extract_geom(cube, sf)%>%
-    arrange(time)
-  
-  vals_05 <- vals %>% 
-    filter(time == "2000-05-01")
-  
-  vals_06 <- vals %>% 
-    filter(time == "2000-06-01")
-  
-  vals_07 <- vals %>% 
-    filter(time == "2000-07-01")
-  
-  vals_08 <- vals %>% 
-    filter(time == "2000-08-01")
-  
-  vals_09 <- vals %>% 
-    filter(time == "2000-09-01")
-  
-  range_05 <- max(vals_05$x1) - min(vals_05$x1)
-  range_06 <- max(vals_06$x1) - min(vals_06$x1)
-  range_07 <- max(vals_07$x1) - min(vals_07$x1)
-  range_08 <- max(vals_08$x1) - min(vals_08$x1)
-  range_09 <- max(vals_09$x1) - min(vals_09$x1)
-  
-  return(c(range_05, range_06, range_07, range_08, range_09))
-  
-}
-
-ndvi_ranges <- ranger(cube_ndvi, sf)
-evi_ranges <- ranger(cube_evi, sf)
-nirv_ranges <- ranger(cube_nirv, sf)
-
-# Combine the ranges
-df_ranges <- data.frame(ndvi = ndvi_ranges, evi = evi_ranges, irv = nirv_ranges)
-                        
 # extracing cubes values by polygon
 ref_ndvi_means <- extract_geom(cube_ndvi, sf, FUN = mean)
 ref_evi_means <- extract_geom(cube_evi, sf, FUN = mean)
 ref_nirv_means <- extract_geom(cube_nirv, sf, FUN = mean)
+
+df_ref <- bind_rows(ref_ndvi_means, ref_evi_means, ref_nirv_means)
 
 # Study
 
@@ -109,11 +73,11 @@ df_dif_2015 <- slice(df_differences, 11:15)
 df_dif_2016 <- slice(df_differences, 16:20)
 df_dif_2017 <- slice(df_differences, 21:25)
 
-df_dif_2013_harmonised <- (df_dif_2013/df_ranges)*100
-df_dif_2014_harmonised <- (df_dif_2014/df_ranges)*100
-df_dif_2015_harmonised <- (df_dif_2015/df_ranges)*100
-df_dif_2016_harmonised <- (df_dif_2016/df_ranges)*100
-df_dif_2017_harmonised <- (df_dif_2017/df_ranges)*100
+df_dif_2013_harmonised <- (df_dif_2013)*100
+df_dif_2014_harmonised <- (df_dif_2014)*100
+df_dif_2015_harmonised <- (df_dif_2015)*100
+df_dif_2016_harmonised <- (df_dif_2016)*100
+df_dif_2017_harmonised <- (df_dif_2017)*100
 
 df_differences_harmonised <- bind_rows(df_dif_2013_harmonised, df_dif_2014_harmonised, df_dif_2015_harmonised, df_dif_2016_harmonised, df_dif_2017_harmonised)
 
