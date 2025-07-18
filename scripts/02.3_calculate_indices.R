@@ -29,7 +29,9 @@ paths <- list.files(path = "data/work/study/P1M", pattern = "MODIS", full.names 
 months <- 5:9
 years <- 2013:2017
 
-cube  <- stack_cube(paths, datetime_values = paste0(years, "-0", months))
+datetime_values <- as.vector(sapply(years, function(y) sprintf("%d-%02d-01", y, months)))
+
+cube  <- stack_cube(paths, datetime_values = datetime_values)
 
 ndvi <- apply_pixel(cube, "(x2 - x1) / (x2 + x1)", "NDVI")
 evi  <- apply_pixel(cube, "(2.5 * (x2 - x1) / (x2 + 6 * x1 - 7.5 * x3 + 1))", "EVI")
