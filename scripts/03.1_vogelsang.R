@@ -19,37 +19,41 @@ sf <- st_transform(sf, "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +R=6371007.181 +units=
 path = "data/work/reference/indices/"
 
 paths_ndvi <- list.files(path = path, pattern = "NDVI_", full.names = TRUE)
-paths_evi <- list.files(path = path, pattern = "EVI_", full.names = TRUE)
+paths_evi  <- list.files(path = path, pattern = "EVI_",  full.names = TRUE)
 paths_nirv <- list.files(path = path, pattern = "NIRv_", full.names = TRUE)
 
 # Stack the cubes, one cubes for each month over the whole reference period.
 months <- 5:9
 
 cube_ndvi <- stack_cube(paths_ndvi, datetime_values = paste0("2000-0", months))
-cube_evi <- stack_cube(paths_evi, datetime_values = paste0("2000-0", months))
+cube_evi  <- stack_cube(paths_evi,  datetime_values = paste0("2000-0", months))
 cube_nirv <- stack_cube(paths_nirv, datetime_values = paste0("2000-0", months))
 
 # extracing cubes values by polygon
 ref_ndvi_means <- extract_geom(cube_ndvi, sf, FUN = mean)
-ref_ndvi_means$index <- "ndvi"
+ref_ndvi_means <- ref_ndvi_means %>% rename(ndvi = x1)
 
 ref_evi_means <- extract_geom(cube_evi, sf, FUN = mean)
-ref_evi_means$index <- "evi"
+ref_evi_means <- ref_evi_means %>% rename(evi = x1)
 
 ref_nirv_means <- extract_geom(cube_nirv, sf, FUN = mean)
-ref_nirv_means$index <- "nirv"
+ref_nirv_means <- ref_nirv_means %>% rename(nirv = x1)
 
-df_ref <- bind_rows(ref_ndvi_means, ref_evi_means, ref_nirv_means)
+df_ref <- ref_ndvi_means %>%
+  left_join(ref_evi_means, by = c("FID", "time")) %>%
+  left_join(ref_nirv_means, by = c("FID", "time"))
 
-df_ref$FID <- NULL
+rownames(df_ref) <- df_ref$time
 
+df_ref <- df_ref %>% 
+  select(ndvi, evi, nirv)
+  
 # Study
-
 # Get the path
 path = "data/work/study/indices/"
 
 paths_ndvi <- list.files(path = path, pattern = "NDVI_", full.names = TRUE)
-paths_evi <- list.files(path = path, pattern = "EVI_", full.names = TRUE)
+paths_evi  <- list.files(path = path, pattern = "EVI_",  full.names = TRUE)
 paths_nirv <- list.files(path = path, pattern = "NIRv_", full.names = TRUE)
 
 # Stack the cubes, one cubes for each month over the whole reference period.
@@ -59,78 +63,86 @@ years <- 2013:2017
 datetime_values <- as.vector(sapply(years, function(y) sprintf("%d-%02d-01", y, months)))
 
 cube_ndvi <- stack_cube(paths_ndvi, datetime_values = datetime_values)
-cube_evi <- stack_cube(paths_evi, datetime_values = datetime_values)
+cube_evi  <- stack_cube(paths_evi,  datetime_values = datetime_values)
 cube_nirv <- stack_cube(paths_nirv, datetime_values = datetime_values)
 
 ndvi_means <- extract_geom(cube_ndvi, sf, FUN = mean)
-ndvi_means$index <- "ndvi"
+ndvi_means <- ndvi_means %>% rename(ndvi = x1)
 
 evi_means <- extract_geom(cube_evi, sf, FUN = mean)
-evi_means$index <- "evi"
+evi_means <- evi_means %>% rename(evi = x1)
 
 nirv_means <- extract_geom(cube_nirv, sf, FUN = mean)
-nirv_means$index <- "nirv"
+nirv_means <- nirv_means %>% rename(nirv = x1)
 
-df_stu <- bind_rows(ndvi_means, evi_means, nirv_means)
+df_stu <- ndvi_means %>%
+  left_join(evi_means, by = c("FID", "time")) %>%
+  left_join(nirv_means, by = c("FID", "time"))
 
-df_stu$FID <- NULL
+rownames(df_stu) <- df_stu$time
+df_stu <- df_stu %>% 
+  select(ndvi, evi, nirv)
 
 df_2013 <- df_stu %>% 
-  filter(grepl("2013", time))
+  filter(grepl("2013", rownames(df_stu)))
 
 df_2014 <- df_stu %>% 
-  filter(grepl("2014", time))
+  filter(grepl("2014", rownames(df_stu)))
 
 df_2015 <- df_stu %>% 
-  filter(grepl("2015", time))
+  filter(grepl("2015", rownames(df_stu)))
 
 df_2016 <- df_stu %>% 
-  filter(grepl("2016", time))
+  filter(grepl("2016", rownames(df_stu)))
 
 df_2017 <- df_stu %>% 
-  filter(grepl("2017", time))
-
+  filter(grepl("2017", rownames(df_stu)))
 
 # Differences raw.
-df_dif_2013_test <- df_2013$x1 - df_ref$x1
-df_dif_2014_test <- df_2014$x1 - df_ref$x1
-df_dif_2015_test <- df_2015$x1 - df_ref$x1
-df_dif_2016_test <- df_2016$x1 - df_ref$x1
-df_dif_2017_test <- df_2017$x1 - df_ref$x1
+df_dif_2013_abs <- df_2013 - df_ref
+df_dif_2014_abs <- df_2014 - df_ref
+df_dif_2015_abs <- df_2015 - df_ref
+df_dif_2016_abs <- df_2016 - df_ref
+df_dif_2017_abs <- df_2017 - df_ref
 
-df_dif_2013_harmonised <- (df_dif_2013_test - df_ref$x1)*100
-df_dif_2014_harmonised <- (df_dif_2014_test - df_ref$x1)*100
-df_dif_2015_harmonised <- (df_dif_2015_test - df_ref$x1)*100
-df_dif_2016_harmonised <- (df_dif_2016_test - df_ref$x1)*100
-df_dif_2017_harmonised <- (df_dif_2017_test - df_ref$x1)*100
+df_dif_2013_rel <- (df_dif_2013_abs - df_ref)*100
+df_dif_2014_rel <- (df_dif_2014_abs - df_ref)*100
+df_dif_2015_rel <- (df_dif_2015_abs - df_ref)*100
+df_dif_2016_rel <- (df_dif_2016_abs - df_ref)*100
+df_dif_2017_rel <- (df_dif_2017_abs - df_ref)*100
 
-df_test <- data.frame("2013" = df_dif_2013_harmonised,
-                      "2014" = df_dif_2014_harmonised,
-                      "2015" = df_dif_2015_harmonised,
-                      "2016" = df_dif_2016_harmonised,
-                      "2017" = df_dif_2017_harmonised)
+# Combine the dataframes
 
+df_dif_vogelsang_abs <- bind_rows(df_dif_2013_abs, 
+                                  df_dif_2014_abs, 
+                                  df_dif_2015_abs, 
+                                  df_dif_2016_abs, 
+                                  df_dif_2017_abs)
 
+df_dif_vogelsang_rel <- bind_rows(df_dif_2013_rel, 
+                                  df_dif_2014_rel, 
+                                  df_dif_2015_rel, 
+                                  df_dif_2016_rel, 
+                                  df_dif_2017_rel)
 
+df_dif_vogelsang_abs$time <- as.Date(rownames(df_dif_vogelsang_abs))
+df_dif_vogelsang_rel$time <- as.Date(rownames(df_dif_vogelsang_rel))
 
-
-
-
-
-
-
-
-
-
-
-df_test$date <- as.Date(paste0(datetime_values))
-
-df_differences_harmonised_long <- df_differences_harmonised %>%
+df_dif_vogelsang_abs_long <- df_dif_vogelsang_abs %>%
   pivot_longer(
     cols = c(ndvi, evi, nirv),
     names_to = "index",
-    values_to = "difference"
+    values_to = "value"
   )
 
-save(df_differences_harmonised_long, file = "data/work/dataframes/df_diff_harm_long_vogelsang.RData")
+df_dif_vogelsang_rel_long <- df_dif_vogelsang_rel %>%
+  pivot_longer(
+    cols = c(ndvi, evi, nirv),
+    names_to = "index",
+    values_to = "value"
+  )
+
+keep(df_dif_vogelsang_abs_long, df_dif_vogelsang_rel_long, sure = TRUE)
+
+#save(df_differences_harmonised_long, file = "data/work/dataframes/df_diff_harm_long_vogelsang.RData")
 
