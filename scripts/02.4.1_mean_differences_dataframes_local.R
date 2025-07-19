@@ -113,40 +113,43 @@ df_dif_2017_rel <- (df_dif_2017_abs / df_ref)*100
 
 # Combine the dataframes
 
-df_dif_vogelsang_abs <- bind_rows(df_dif_2013_abs, 
-                                  df_dif_2014_abs, 
-                                  df_dif_2015_abs, 
-                                  df_dif_2016_abs, 
-                                  df_dif_2017_abs)
+df_dif_abs_loc <- bind_rows(df_dif_2013_abs, 
+                            df_dif_2014_abs, 
+                            df_dif_2015_abs, 
+                            df_dif_2016_abs, 
+                            df_dif_2017_abs)
 
-df_dif_vogelsang_rel <- bind_rows(df_dif_2013_rel, 
-                                  df_dif_2014_rel, 
-                                  df_dif_2015_rel, 
-                                  df_dif_2016_rel, 
-                                  df_dif_2017_rel)
+df_dif_rel_loc <- bind_rows(df_dif_2013_rel, 
+                            df_dif_2014_rel, 
+                            df_dif_2015_rel, 
+                            df_dif_2016_rel, 
+                            df_dif_2017_rel)
 
-df_dif_vogelsang_abs$time <- as.Date(rownames(df_dif_vogelsang_abs))
-df_dif_vogelsang_rel$time <- as.Date(rownames(df_dif_vogelsang_rel))
+df_dif_abs_loc$time <- as.Date(rownames(df_dif_abs_loc))
+df_dif_rel_loc$time <- as.Date(rownames(df_dif_rel_loc))
 
-df_dif_vogelsang_abs_long <- df_dif_vogelsang_abs %>%
+df_dif_abs_loc_long <- df_dif_abs_loc %>%
   pivot_longer(
     cols = c(ndvi, evi, nirv),
     names_to = "index",
     values_to = "value"
   )
 
-df_dif_vogelsang_rel_long <- df_dif_vogelsang_rel %>%
+df_dif_rel_loc_long <- df_dif_rel_loc %>%
   pivot_longer(
     cols = c(ndvi, evi, nirv),
     names_to = "index",
     values_to = "value"
   )
 
-keep(df_dif_vogelsang_abs_long, df_dif_vogelsang_rel_long, sure = TRUE)
+keep(df_dif_abs_loc,
+     df_dif_rel_loc,
+     df_dif_abs_loc_long, 
+     df_dif_rel_loc_long, 
+     sure = TRUE)
 
-save(df_dif_vogelsang_abs_long,
-     file = "data/work/dataframes/df_dif_vogelsang_abs_long.RData")
+save(df_dif_abs_loc,      file = "data/work/dataframes/df_dif_absolute_local.RData")
+save(df_dif_rel_loc,      file = "data/work/dataframes/df_dif_relative_local.RData")
 
-
-save(df_dif_vogelsang_rel_long,
-     file = "data/work/dataframes/df_dif_vogelsang_rel_long.RData")
+save(df_dif_abs_loc_long, file = "data/work/dataframes/df_dif_absolute_local_long.RData")
+save(df_dif_rel_loc_long, file = "data/work/dataframes/df_dif_relative_local_long.RData")

@@ -12,30 +12,29 @@ library(dplyr)
 library(gdata)
 library(tidyr)
 
-# Reference -------------------------------------------------------------
-
-# Loading the indices.
+# REFERENCE -------------------------------------------------------------
+# Load data. --------------------------------------------------------------
 ndvi <- rast(list.files(path = "data/work/reference/indices", pattern = "NDVI", full.names = TRUE)) 
 evi <- rast(list.files(path = "data/work/reference/indices", pattern = "EVI", full.names = TRUE))
 nirv <- rast(list.files(path = "data/work/reference/indices", pattern = "NIRv", full.names = TRUE))
 
 lai <- rast(list.files(path = "data/work/reference/lai/qa1/p13y/", pattern = "LAI", full.names = TRUE))
 
-# Loading the mask
+# Load mask.
 mask <- rast("data/work/mask/mask_66p.tif")
 
-# Define the function for mask and mean. ----------------------------------
+# Define helper function. ----------------------------------
 mask_mean = function(raster, mask) {
   x <- raster %>%
     mask(mask) %>%
     global (fun = mean, na.rm = TRUE)
 }
 
-# Setting the new names for columns and rows of the resluting dataframe
-new_col_names <- c("NDVI_Broad","NDVI_Conifer", 
-                   "EVI_Broad","EVI_Conifer", 
+# Define new names for columns and rows.
+new_col_names <- c("NDVI_Broad", "NDVI_Conifer", 
+                   "EVI_Broad" , "EVI_Conifer", 
                    "NIRv_Broad", "NIRv_Conifer", 
-                   "LAI_Broad","LAI_Conifer")
+                   "LAI_Broad" , "LAI_Conifer")
 
 new_row_names <- c("May", "June", "July", "August", "September")
 
@@ -61,7 +60,7 @@ df_ref <- data.frame(ndvi_bro_mean, ndvi_con_mean,
 row.names(df_ref) <- new_row_names
 colnames(df_ref) <- new_col_names
 
-# Study period. ---------------------------------------------------------
+# STUDY. ---------------------------------------------------------
 # Loading the indices pictures per year and index-----------------------------------------------------
 path <- "data/work/study/indices/"
 
@@ -165,77 +164,67 @@ row.names(df_2016) <- new_row_names
 row.names(df_2017) <- new_row_names
 
 # Differences -------------------------------------------------------------
-df_2013_differences <- df_2013 - df_ref
-df_2014_differences <- df_2014 - df_ref
-df_2015_differences <- df_2015 - df_ref
-df_2016_differences <- df_2016 - df_ref
-df_2017_differences <- df_2017 - df_ref
+df_2013_dif_abs <- df_2013 - df_ref
+df_2014_dif_abs <- df_2014 - df_ref
+df_2015_dif_abs <- df_2015 - df_ref
+df_2016_dif_abs <- df_2016 - df_ref
+df_2017_dif_abs <- df_2017 - df_ref
 
-df_differences <- bind_rows(df_2013_differences,
-                            df_2014_differences,
-                            df_2015_differences,
-                            df_2016_differences,
-                            df_2017_differences)
+df_dif_abs_reg <- bind_rows(df_2013_dif_abs,
+                            df_2014_dif_abs,
+                            df_2015_dif_abs,
+                            df_2016_dif_abs,
+                            df_2017_dif_abs)
+months <- 5:9
+years <- 2013:2017
 
-row.names(df_differences) <- c("13/05", "13/06", "13/07", "13/08", "13/09",
-                               "14/05", "14/06", "14/07", "14/08", "14/09",
-                               "15/05", "15/06", "15/07", "15/08", "15/09",
-                               "16/05", "16/06", "16/07", "16/08", "16/09",
-                               "17/05", "17/06", "17/07", "17/08", "17/09")
+row.names(df_dif_abs_reg) <- as.vector(sapply(years, function(y) sprintf("%d-%02d-01", y, months)))
 
+# Harmosing ---------------------------------------------------------------s 
+df_2013_dif_rel <- (df_2013_dif_abs / df_ref) * 100
+df_2014_dif_rel <- (df_2014_dif_abs / df_ref) * 100
+df_2015_dif_rel <- (df_2015_dif_abs / df_ref) * 100
+df_2016_dif_rel <- (df_2016_dif_abs / df_ref) * 100
+df_2017_dif_rel <- (df_2017_dif_abs / df_ref) * 100
 
-save(df_differences, file = "data/work/dataframes/df_differences.RData")
+df_dif_rel_reg <- bind_rows(df_2013_dif_rel,
+                            df_2014_dif_rel,
+                            df_2015_dif_rel,
+                            df_2016_dif_rel,
+                            df_2017_dif_rel)
 
+# Pivoting to longer (for better use in ggplot2).
+months <- 5:9
+years <- 2013:2017
 
-# Harmosing ---------------------------------------------------------------
-# Cleaning the environment.
-keep(df_ref, 
-     df_differences, 
-     df_2013_differences, 
-     df_2014_differences,
-     df_2015_differences,
-     df_2016_differences,
-     df_2017_differences,
-     sure = TRUE)
+df_dif_abs_reg$date <- as.Date(sapply(years, function(y) sprintf("%d-%02d-01", y, months)))
+df_dif_rel_reg$date <- as.Date(sapply(years, function(y) sprintf("%d-%02d-01", y, months)))
 
-# Harmonsing the differences 
-df_2013_differences_harmonised <- (df_2013_differences / df_ref) * 100
-df_2014_differences_harmonised <- (df_2014_differences / df_ref) * 100
-df_2015_differences_harmonised <- (df_2015_differences / df_ref) * 100
-df_2016_differences_harmonised <- (df_2016_differences / df_ref) * 100
-df_2017_differences_harmonised <- (df_2017_differences / df_ref) * 100
+df_dif_abs_reg_long <- df_dif_abs_reg %>%
+  pivot_longer(
+    cols = -date,
+    names_to = c("Index", "Vegetation"),
+    names_sep = "_",
+    values_to = "value"
+  )
 
-df_differences_harmonised <- bind_rows(df_2013_differences_harmonised,
-                                       df_2014_differences_harmonised,
-                                       df_2015_differences_harmonised,
-                                       df_2016_differences_harmonised,
-                                       df_2017_differences_harmonised)
-
- row.names(df_differences_harmonised) <- c("13/05", "13/06", "13/07", "13/08", "13/09",
-                                           "14/05", "14/06", "14/07", "14/08", "14/09",
-                                           "15/05", "15/06", "15/07", "15/08", "15/09",
-                                           "16/05", "16/06", "16/07", "16/08", "16/09",
-                                           "17/05", "17/06", "17/07", "17/08", "17/09")
- 
- save(df_differences_harmonised, file = "data/work/dataframes/df_differences_harmonised.RData")
- 
- 
- # Pivoting to longer (for better use in ggplot2).
- datetime_values = c("2013-05-01", "2013-06-01", "2013-07-01", "2013-08-01", "2013-09-01",
-                     "2014-05-01", "2014-06-01", "2014-07-01", "2014-08-01", "2014-09-01",
-                     "2015-05-01", "2015-06-01", "2015-07-01", "2015-08-01", "2015-09-01",
-                     "2016-05-01", "2016-06-01", "2016-07-01", "2016-08-01", "2016-09-01",
-                     "2017-05-01", "2017-06-01", "2017-07-01", "2017-08-01", "2017-09-01")
- 
- df_differences_harmonised$date <- as.Date(paste0(datetime_values))
- 
- 
- df_differences_harmonised_long <- df_differences_harmonised %>%
+df_dif_rel_reg_long <- df_dif_rel_reg %>%
    pivot_longer(
      cols = -date,
      names_to = c("Index", "Vegetation"),
      names_sep = "_",
      values_to = "value"
    )
+
+keep(df_dif_abs_reg,
+     df_dif_rel_reg,
+     df_dif_abs_reg_long, 
+     df_dif_rel_reg_long, 
+     sure = TRUE)
+
+save(df_dif_abs_reg,      file = "data/work/dataframes/df_dif_absolute_regional.RData")
+save(df_dif_rel_reg,      file = "data/work/dataframes/df_dif_relative_regional.RData")
  
- save(df_differences_harmonised_long, file = "data/work/dataframes/df_differences_harmonised_long.RData")
+save(df_dif_abs_reg_long, file = "data/work/dataframes/df_dif_absolute_regional_long.RData")
+save(df_dif_rel_reg_long, file = "data/work/dataframes/df_dif_relative_regional_long.RData")
+ 
