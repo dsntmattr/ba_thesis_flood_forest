@@ -23,21 +23,29 @@ paths_evi <- list.files(path = path, pattern = "EVI_", full.names = TRUE)
 paths_nirv <- list.files(path = path, pattern = "NIRv_", full.names = TRUE)
 
 # Stack the cubes, one cubes for each month over the whole reference period.
-cube_ndvi <- stack_cube(paths_ndvi, datetime_values = c("2000-05-01", "2000-06-01", "2000-07-01", "2000-08-01", "2000-09-01"))
-cube_evi <- stack_cube(paths_evi, datetime_values = c("2000-05-01", "2000-06-01", "2000-07-01", "2000-08-01", "2000-09-01"))
-cube_nirv <- stack_cube(paths_nirv, datetime_values = c("2000-05-01", "2000-06-01", "2000-07-01", "2000-08-01", "2000-09-01"))
+months <- 5:9
+
+cube_ndvi <- stack_cube(paths_ndvi, datetime_values = paste0("2000-0", months))
+cube_evi <- stack_cube(paths_evi, datetime_values = paste0("2000-0", months))
+cube_nirv <- stack_cube(paths_nirv, datetime_values = paste0("2000-0", months))
 
 # extracing cubes values by polygon
 ref_ndvi_means <- extract_geom(cube_ndvi, sf, FUN = mean)
+ref_ndvi_means$index <- "ndvi"
+
 ref_evi_means <- extract_geom(cube_evi, sf, FUN = mean)
+ref_evi_means$index <- "evi"
+
 ref_nirv_means <- extract_geom(cube_nirv, sf, FUN = mean)
+ref_nirv_means$index <- "nirv"
 
 df_ref <- bind_rows(ref_ndvi_means, ref_evi_means, ref_nirv_means)
 
+df_ref$FID <- NULL
+
 # Study
 
-# Get the paths
-
+# Get the path
 path = "data/work/study/indices/"
 
 paths_ndvi <- list.files(path = path, pattern = "NDVI_", full.names = TRUE)
@@ -45,43 +53,77 @@ paths_evi <- list.files(path = path, pattern = "EVI_", full.names = TRUE)
 paths_nirv <- list.files(path = path, pattern = "NIRv_", full.names = TRUE)
 
 # Stack the cubes, one cubes for each month over the whole reference period.
-datetime_values = c("2013-05-01", "2013-06-01", "2013-07-01", "2013-08-01", "2013-09-01",
-                    "2014-05-01", "2014-06-01", "2014-07-01", "2014-08-01", "2014-09-01",
-                    "2015-05-01", "2015-06-01", "2015-07-01", "2015-08-01", "2015-09-01",
-                    "2016-05-01", "2016-06-01", "2016-07-01", "2016-08-01", "2016-09-01",
-                    "2017-05-01", "2017-06-01", "2017-07-01", "2017-08-01", "2017-09-01")
+months <- 5:9
+years <- 2013:2017
 
+datetime_values <- as.vector(sapply(years, function(y) sprintf("%d-%02d-01", y, months)))
 
 cube_ndvi <- stack_cube(paths_ndvi, datetime_values = datetime_values)
 cube_evi <- stack_cube(paths_evi, datetime_values = datetime_values)
 cube_nirv <- stack_cube(paths_nirv, datetime_values = datetime_values)
 
 ndvi_means <- extract_geom(cube_ndvi, sf, FUN = mean)
-evi_means <- extract_geom(cube_evi, sf, FUN = mean)
-nirv_means <- extract_geom(cube_nirv, sf, FUN = mean)
+ndvi_means$index <- "ndvi"
 
-df_differences <- data.frame(ndvi = c(ndvi_means$x1 - ref_ndvi_means$x1),
-                          evi = c(evi_means$x1 - ref_evi_means$x1),
-                          nirv = c(nirv_means$x1 - ref_nirv_means$x1))
+evi_means <- extract_geom(cube_evi, sf, FUN = mean)
+evi_means$index <- "evi"
+
+nirv_means <- extract_geom(cube_nirv, sf, FUN = mean)
+nirv_means$index <- "nirv"
+
+df_stu <- bind_rows(ndvi_means, evi_means, nirv_means)
+
+df_stu$FID <- NULL
+
+df_2013 <- df_stu %>% 
+  filter(grepl("2013", time))
+
+df_2014 <- df_stu %>% 
+  filter(grepl("2014", time))
+
+df_2015 <- df_stu %>% 
+  filter(grepl("2015", time))
+
+df_2016 <- df_stu %>% 
+  filter(grepl("2016", time))
+
+df_2017 <- df_stu %>% 
+  filter(grepl("2017", time))
 
 
 # Differences raw.
-# Slice for each years.
-df_dif_2013 <- slice(df_differences, 1:5)
-df_dif_2014 <- slice(df_differences, 6:10)
-df_dif_2015 <- slice(df_differences, 11:15)
-df_dif_2016 <- slice(df_differences, 16:20)
-df_dif_2017 <- slice(df_differences, 21:25)
+df_dif_2013_test <- df_2013$x1 - df_ref$x1
+df_dif_2014_test <- df_2014$x1 - df_ref$x1
+df_dif_2015_test <- df_2015$x1 - df_ref$x1
+df_dif_2016_test <- df_2016$x1 - df_ref$x1
+df_dif_2017_test <- df_2017$x1 - df_ref$x1
 
-df_dif_2013_harmonised <- (df_dif_2013)*100
-df_dif_2014_harmonised <- (df_dif_2014)*100
-df_dif_2015_harmonised <- (df_dif_2015)*100
-df_dif_2016_harmonised <- (df_dif_2016)*100
-df_dif_2017_harmonised <- (df_dif_2017)*100
+df_dif_2013_harmonised <- (df_dif_2013_test - df_ref$x1)*100
+df_dif_2014_harmonised <- (df_dif_2014_test - df_ref$x1)*100
+df_dif_2015_harmonised <- (df_dif_2015_test - df_ref$x1)*100
+df_dif_2016_harmonised <- (df_dif_2016_test - df_ref$x1)*100
+df_dif_2017_harmonised <- (df_dif_2017_test - df_ref$x1)*100
 
-df_differences_harmonised <- bind_rows(df_dif_2013_harmonised, df_dif_2014_harmonised, df_dif_2015_harmonised, df_dif_2016_harmonised, df_dif_2017_harmonised)
+df_test <- data.frame("2013" = df_dif_2013_harmonised,
+                      "2014" = df_dif_2014_harmonised,
+                      "2015" = df_dif_2015_harmonised,
+                      "2016" = df_dif_2016_harmonised,
+                      "2017" = df_dif_2017_harmonised)
 
-df_differences_harmonised$date <- as.Date(paste0(datetime_values))
+
+
+
+
+
+
+
+
+
+
+
+
+
+df_test$date <- as.Date(paste0(datetime_values))
 
 df_differences_harmonised_long <- df_differences_harmonised %>%
   pivot_longer(
