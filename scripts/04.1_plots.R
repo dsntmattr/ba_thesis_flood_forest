@@ -15,7 +15,7 @@ load("data/work/dataframes/df_dif_relative_regional_long.RData")
 # Change properties of the plots. -----------------------------------------
 
 size <- 0.5
-ylim <- c(-25, 25)
+ylim <- c(-40, 30)
 
 # Local.  --------------------------------------------------------------
 
@@ -33,19 +33,21 @@ plot <- ggplot(df_grouped, aes(
   x = MonthYear,
   y = value,
   color = index,
-  linetype = index,
+  #linetype = index,
   group = interaction(index, year)
 )) +
   geom_line(size = size) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   ylim(ylim) + 
   labs(
-    title = "Zeitverlauf Vegetationsindizes Lokal (Vogelsang)",
-    subtitle = "Mai–September 2013–2017",
+    title = "Zeitverlauf Indizes Lokal (Vogelsang)",
+    subtitle = "Mai–September 2013–2017,
+    Referenzperiode Vegetationsindizes: 2000 - 2012
+    Referenzperiode Blattflächenindex: 2003 - 2012",
     x = "Monat",
     y = "Abweichung in %",
     color = "Index",
-    linetype = "Index",
+    #linetype = "Index",
     caption = "Quelle: MODIS NBAR Daily"
   ) +
   theme_minimal() +
@@ -87,6 +89,9 @@ df_grouped %>%
       ylim(ylim) +
       labs(
         title = paste("Vergleich der Indizes für Waldtyp:", unique(.$Vegetation)),
+        subtitle = "Mai–September 2013–2017,
+    Referenzperiode Vegetationsindizes: 2000 - 2012
+    Referenzperiode Blattflächenindex: 2003 - 2012",
         x = "Monat",
         y = "Abweichung in %",
         color = "Index",
@@ -103,18 +108,15 @@ df_grouped %>%
 # plots_by_vegetation$p enthält dann eine Liste mit Plots, z.B.:
 plots_by_vegetation$p[[1]]  # erster Waldtyp
 plots_by_vegetation$p[[2]]  # zweiter Waldtyp
-#plots_by_vegetation$p[[3]]  # zweiter Waldtyp
-# etc.
+
 
 ggsave("data/final/plots/regional_broad.png",   plot = plots_by_vegetation$p[[1]], bg = "white")
 ggsave("data/final/plots/regional_conifer.png", plot = plots_by_vegetation$p[[2]], bg = "white")
 
 # Compare one index for all forest type
 
-index_to_plot <- "NDVI"  # Beispiel: IndexType, den du anschauen willst
-
 df_filtered <- df_grouped %>%
-  filter(Index == index_to_plot)
+  filter(Index == "NDVI")
 
 plot <- ggplot(df_filtered, aes(
   x = MonthYear,
@@ -128,6 +130,9 @@ plot <- ggplot(df_filtered, aes(
   ylim(ylim) +
   labs(
     title = paste("Vergleich von", index_to_plot, "bei allen Waldtypen"),
+    subtitle = "Mai–September 2013–2017,
+    Referenzperiode Vegetationsindizes: 2000 - 2012
+    Referenzperiode Blattflächenindex: 2003 - 2012",
     x = "Monat",
     y = "Abweichung in %",
     color = "Waldtyp",
