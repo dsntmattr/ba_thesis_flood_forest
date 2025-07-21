@@ -1,27 +1,21 @@
+# Script to plot the timeseries results.
 # Packages. ---------------------------------------------------------------
 library(ggplot2)
 library(lubridate)
 library(dplyr)
 theme_set(theme_linedraw())
 
-# Each plot in new window.  ----------------------------------------
-#dev.off()
-
 # Load dataframes. --------------------------------------------------------
 load("data/work/dataframes/df_dif_relative_local_long.RData")
 load("data/work/dataframes/df_dif_relative_regional_long.RData")
+# Define plot properties. -----------------------------------------
 
-
-# Change properties of the plots. -----------------------------------------
-
-size <- 0.5
-ylim <- c(-40, 30)
+size <- 0.5   # Line size.
+ylim <- c(-40, 30) # Dimension of y axis.
 
 # Local.  --------------------------------------------------------------
-
 df <- df_dif_rel_loc_long
 
-# All graphs in one plot.
 df_grouped <- df %>%
   mutate(
     year = as.numeric(format(time, "%Y"))

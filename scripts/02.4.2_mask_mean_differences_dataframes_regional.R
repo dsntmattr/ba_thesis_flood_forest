@@ -1,16 +1,11 @@
-# Mask the calculated indices and the LAI product with the selfmade forest type covergae masks,
-# calculate mean values,
-# calculate differences between reference period and study period
-# and create dataframes.
+# Packages. ---------------------------------------------------------------
+# Spatial data.
+library(terra)       # raster
 
-# Packages ---------------------------------------------------------
-# Spatial data
-library(terra) # raster
-# Data manipulation and more.
-library(magrittr) # pipe operator %>%
-library(dplyr)
-library(gdata)
-library(tidyr)
+# Tabular data.
+library(dplyr)       # manipulation
+library(gdata)       # manipulation
+library(tidyr)       # tidying
 
 # REFERENCE -------------------------------------------------------------
 # Load data. --------------------------------------------------------------
