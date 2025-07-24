@@ -1,10 +1,12 @@
 # Script to test the influence of LAI QA1 and QA2 bands on
-# 1. number of remaining pixels
-# 2. result in plot
+# number of remaining pixels.
 
 # Packages
 library(terra)
 library(dplyr)
+library(gdata)
+library(tidyr)
+library(ggplot2)
 
 # Load coverage raster and mask raster.
 cov <- rast("data/work/mask/coverage.tif")
@@ -67,40 +69,33 @@ qa1_2016_valid_cells_mask <- count_cells(r_list[[16:20]], mask, new_rownames, ne
 qa1_2017_valid_cells_cov  <- count_cells(r_list[[21:25]], cov, new_rownames, new_colnames)
 qa1_2017_valid_cells_mask <- count_cells(r_list[[21:25]], mask, new_rownames, new_colnames)
 
+# Alle Ergebnisse in eine Liste packen
+df_list <- list(
+  "Ref"  = qa1_ref_valid_cells_cov,
+  "2013" = qa1_2013_valid_cells_cov,
+  "2014" = qa1_2014_valid_cells_cov,
+  "2015" = qa1_2015_valid_cells_cov,
+  "2016" = qa1_2016_valid_cells_cov,
+  "2017" = qa1_2017_valid_cells_cov
+)
+
+# Liste in einen einzigen Dataframe umwandeln
+qa1_cov_all <- bind_rows(df_list, .id = "Year")
+
+df_list_mask <- list(
+  "Ref"  = qa1_ref_valid_cells_mask,
+  "2013" = qa1_2013_valid_cells_mask,
+  "2014" = qa1_2014_valid_cells_mask,
+  "2015" = qa1_2015_valid_cells_mask,
+  "2016" = qa1_2016_valid_cells_mask,
+  "2017" = qa1_2017_valid_cells_mask
+)
+
+qa1_mask_all <- bind_rows(df_list_mask, .id = "Year")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Test 02 - QA1+QA2
+# # Test 02 - QA1+QA2 -----------------------------------------------------
 # Number of remaining pixels. 
 # Reference ---------------------------------------------------------------
 
@@ -153,54 +148,107 @@ qa1.qa2_2016_valid_cells_mask <- count_cells(r_list[[16:20]], mask, new_rownames
 qa1.qa2_2017_valid_cells_cov  <- count_cells(r_list[[21:25]], cov,  new_rownames, new_colnames)
 qa1.qa2_2017_valid_cells_mask <- count_cells(r_list[[21:25]], mask, new_rownames, new_colnames)
 
+# Alle Ergebnisse in eine Liste packen
+df_list <- list(
+  "Ref"  = qa1.qa2_ref_valid_cells_cov,
+  "2013" = qa1.qa2_2013_valid_cells_cov,
+  "2014" = qa1.qa2_2014_valid_cells_cov,
+  "2015" = qa1.qa2_2015_valid_cells_cov,
+  "2016" = qa1.qa2_2016_valid_cells_cov,
+  "2017" = qa1.qa2_2017_valid_cells_cov
+)
+
+# Liste in einen einzigen Dataframe umwandeln
+qa1.qa2_cov_all <- bind_rows(df_list, .id = "Year")
+
+df_list_mask <- list(
+  "Ref"  = qa1.qa2_ref_valid_cells_mask,
+  "2013" = qa1.qa2_2013_valid_cells_mask,
+  "2014" = qa1.qa2_2014_valid_cells_mask,
+  "2015" = qa1.qa2_2015_valid_cells_mask,
+  "2016" = qa1.qa2_2016_valid_cells_mask,
+  "2017" = qa1.qa2_2017_valid_cells_mask
+)
+
+qa1.qa2_mask_all <- bind_rows(df_list_mask, .id = "Year")
+
+keep(qa1_cov_all, qa1_mask_all,
+     qa1.qa2_cov_all, qa1.qa2_mask_all,
+     sure=TRUE)
 
 
 
+# Plots. ------------------------------------------------------------------
+
+# Coverage
+# Define month names
+monate <- c("MAY", "JUN", "JUL", "AUG", "SEP")
 
 
+qa1 <- qa1_cov_all
+qa2 <- qa1.qa2_cov_all
+
+# Add QA type columnn.
+qa1$QA <- "QA1"
+qa2$QA <- "QA1+QA2"
+
+# Assign month column.
+qa1$Monat <- rep(monate, times = 6) 
+qa2$Monat <- rep(monate, times = 6)
+
+# Combine dataframes.
+combined <- bind_rows(qa1, qa2)
+
+# Sort month as factor.
+combined$Monat <- factor(combined$Monat, levels = monate)
+
+# Pivot from wide to long.
+combined_long <- combined %>%
+  pivot_longer(cols = c("Broad", "Conifer"), names_to = "Vegetation", values_to = "ValidPixels")
+
+# Plotting.
+p <- ggplot(combined_long, aes(x = Monat, y = ValidPixels, fill = QA)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ Year + Vegetation) +
+  labs(x = "Monat", y = "Gültige Pixel",
+       title = "Gültige Pixel pro Monat, QA-Filter & Vegetationstyp", 
+       subtitle = "basierend auf gesamtem überfluteten Wald")
+
+ggsave("data/final/plots/lai_validcells_cov.jpg", plot = p, width = 10, height = 6, dpi = 300)
 
 
+# Mask
+# Define month names
+qa1 <- qa1_mask_all
+qa2 <- qa1.qa2_mask_all
 
+monate <- c("MAY", "JUN", "JUL", "AUG", "SEP")
 
+# Add QA type column
+qa1$QA <- "QA1"
+qa2$QA <- "QA1+QA2"
 
+# Assign month column.
+qa1$Monat <- rep(monate, times = 6) 
+qa2$Monat <- rep(monate, times = 6)
 
+# Combine dataframes.
+combined <- bind_rows(qa1, qa2)
 
+# Sort month as factor.
+combined$Monat <- factor(combined$Monat, levels = monate)
 
+# Pivot from wide to long.
+combined_long <- combined %>%
+  pivot_longer(cols = c("Broad", "Conifer"), names_to = "Vegetation", values_to = "ValidPixels")
 
+# Plotting.
+p <- ggplot(combined_long, aes(x = Monat, y = ValidPixels, fill = QA)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ Year + Vegetation) +
+  labs(x = "Monat", y = "Gültige Pixel",
+       title = "Gültige Pixel pro Monat, QA-Filter & Vegetationstyp", 
+       subtitle = "nach Anwendung 66%-Maske")
 
+ggsave("data/final/plots/lai_validcells_mask.jpg", plot = p, width = 10, height = 6, dpi = 300)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#######################################################################################
-test <- rast("data/work/reference/lai/qa1/p13y/LAI_2003-08-01.tif")
-test_mask_bro <- mask(test, mask[[2]])
-test.cells <- global(test_mask_bro, fun = "notNA", na.rm = FALSE)
