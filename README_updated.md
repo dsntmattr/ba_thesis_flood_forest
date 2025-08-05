@@ -1,8 +1,8 @@
-# Forest Vegetation Index Analysis - R Scripts Documentation
+# Forest Vegetation Dynamics Analysis - R Scripts Documentation
 
 ## Overview
 
-This repository contains R scripts for analyzing forest vegetation indices using MODIS satellite data. The analysis compares vegetation health between a reference period (2000-2012) and a study period (2013-2017) in floodplain forest areas. The workflow processes MODIS NBAR (Nadir BRDF-Adjusted Reflectance) and LAI (Leaf Area Index) data to calculate vegetation indices (NDVI, EVI, NIRv) and analyze temporal changes.
+This repository contains R scripts for analyzing forest vegetation dynamics using MODIS satellite data. The analysis focuses on comparing vegetation status between two reference period (2000–2012 and 2003-2012) and a study period (2013–2017) in floodplain forest areas. The workflow integrates MODIS NBAR (Nadir BRDF-Adjusted Reflectance) data to compute spectral vegetation indices (NDVI, EVI, NIRv) and uses MODIS LAI (Leaf Area Index) products to assess structural vegetation changes over time.
 
 ## Data Sources
 
@@ -186,14 +186,41 @@ project/
 └── output/                         # Visualization outputs
 ```
 
+
 ## Requirements
 
+### R Version
+- Tested with R version 4.4.3
+
+### RStudio Version
+- Tested with RStudio 2023.06.0+421 "Mountain Hydrangea" Release
+
 ### R Packages
-- **Spatial Data**: `gdalcubes`, `sf`, `terra`
-- **Data Access**: `rstac`
-- **Data Manipulation**: `tidyverse`, `dplyr`, `tidyr`, `magrittr`, `gdata`
-- **Visualization**: `ggplot2`, `lubridate`
-- **Output**: `writexl`
+
+- **Spatial Data**:  
+  - `gdalcubes` (v0.7.1)  
+  - `sf` (v1.0-20)  
+  - `terra` (v1.8-29)
+
+- **Data Access**:  
+  - `rstac` (v1.0.1)
+
+- **Data Manipulation**:  
+  - `tidyverse` (v2.0.0)  
+  - `dplyr` (v1.1.4)  
+  - `tidyr` (v1.3.1)  
+  - `magrittr` (v2.0.3)  
+  - `gdata` (v3.0.1)
+
+- **Visualization**:  
+  - `ggplot2` (v3.5.1)  
+  - `lubridate` (v1.9.4)
+
+- **Output**:  
+  - `writexl` (v1.5.4)
+
+> ℹ️ You can install all required packages using `install.packages(c("gdalcubes", "sf", "terra", "rstac", "tidyverse", "dplyr", "tidyr", "magrittr", "gdata", "ggplot2", "lubridate", "writexl"))`  
+> For full reproducibility, consider using the [`renv`](https://rstudio.github.io/renv/) package to lock versions in your project.
 
 ### External Dependencies
 - Access to Microsoft Planetary Computer STAC API
