@@ -82,7 +82,7 @@ The analysis follows a sequential workflow divided into four main phases:
 - `data/work/study/lai/no_qa/p1m/LAI_*.tif` - Monthly study LAI data
 
 #### `script_02_2.r` - Aggregate Reference Period Data
-**Purpose**: Aggregate monthly MODIS data to create long-term monthly averages (P13Y = 13-year period)
+**Purpose**: Aggregate monthly MODIS data to create long-term monthly averages (P13Y = 13-year period, P10Y = 10-year period)
 
 **Key Functions**:
 - Stacks monthly data across multiple years
