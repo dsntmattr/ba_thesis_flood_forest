@@ -2,7 +2,7 @@
 # SCRIPT: Calculate Remaining Area Percentages and Pixel Counts
 # PURPOSE: Analyze the remaining forest area and pixel counts after applying
 #          different coverage threshold masks
-# AUTHOR: [Your Name]
+# AUTHOR: Matthias Lerch
 # DATE: [Current Date]
 # ==============================================================================
 

@@ -2,7 +2,7 @@
 # SCRIPT: Calculate Vegetation Indices
 # PURPOSE: Calculate NDVI, EVI, and NIRv from MODIS reflectance data
 #          for both reference and study periods
-# AUTHOR: [Your Name]
+# AUTHOR: Matthias Lerch
 # DATE: [Current Date]
 # ==============================================================================
 

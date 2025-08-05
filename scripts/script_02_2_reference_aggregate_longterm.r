@@ -2,7 +2,7 @@
 # SCRIPT: Aggregate Reference Period Data
 # PURPOSE: Aggregate monthly MODIS NBAR and LAI data from reference period
 #          to create long-term monthly averages (P13Y = 13-year period)
-# AUTHOR: [Your Name]
+# AUTHOR: Matthias Lerch
 # DATE: [Current Date]
 # ==============================================================================
 
@@ -103,7 +103,7 @@ cube_09_P13Y <- reduce_time(cube_09, "mean(x1)")           # September LAI avera
 
 # Define output parameters for LAI
 prefix <- "LAI_"                                            # File prefix
-dir <- "data/work/reference/lai/no_qa/p13y/"               # Output directory
+dir <- "data/work/reference/lai/no_qa/p10y/"               # Output directory
 
 # Save LAI long-term monthly averages
 write_tif(cube_05_P13Y, dir = dir, prefix = prefix)        # May LAI reference

@@ -2,7 +2,7 @@
 # SCRIPT: Create Time Series Visualization Plots
 # PURPOSE: Generate standardized time series plots comparing vegetation indices
 #          between study period and reference period for local and regional analysis
-# AUTHOR: [Your Name]
+# AUTHOR: Matthias Lerch
 # DATE: [Current Date]
 # ==============================================================================
 

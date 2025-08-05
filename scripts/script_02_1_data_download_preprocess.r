@@ -2,7 +2,7 @@
 # SCRIPT: Download, Aggregate and Rescale MODIS Data
 # PURPOSE: Download MODIS NBAR and LAI data, aggregate to monthly composites,
 #          and rescale values for analysis
-# AUTHOR: [Your Name]
+# AUTHOR: Matthias Lerch
 # DATE: [Current Date]
 # ==============================================================================
 

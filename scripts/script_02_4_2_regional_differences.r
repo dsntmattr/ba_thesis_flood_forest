@@ -2,7 +2,7 @@
 # SCRIPT: Calculate Mean Differences - Regional Level Analysis
 # PURPOSE: Create dataframes with time series values comparing study period
 #          to reference period at regional level using forest type masks
-# AUTHOR: [Your Name]
+# AUTHOR: Matthias Lerch
 # DATE: [Current Date]
 # ==============================================================================
 

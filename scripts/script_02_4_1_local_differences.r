@@ -2,7 +2,7 @@
 # SCRIPT: Calculate Mean Differences - Local Level Analysis
 # PURPOSE: Create dataframes with time series values comparing study period
 #          to reference period at local forest loss sites
-# AUTHOR: [Your Name]
+# AUTHOR: Matthias Lerch
 # DATE: [Current Date]
 # ==============================================================================
 

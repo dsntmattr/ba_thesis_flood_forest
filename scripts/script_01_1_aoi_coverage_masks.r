@@ -2,7 +2,7 @@
 # SCRIPT: Create Area of Interest (AOI), Coverage Layers and Forest Masks
 # PURPOSE: Intersect floodplains with forest areas and create coverage masks
 #          with different thresholds for remote sensing analysis
-# AUTHOR: [Your Name]
+# AUTHOR: Matthias Lerch
 # DATE: [Current Date]
 # ==============================================================================
 
