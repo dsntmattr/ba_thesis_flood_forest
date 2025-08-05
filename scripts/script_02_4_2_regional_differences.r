@@ -28,7 +28,7 @@ evi <- rast(list.files(path = "data/work/reference/indices", pattern = "EVI", fu
 nirv <- rast(list.files(path = "data/work/reference/indices", pattern = "NIRv", full.names = TRUE))
 
 # Load reference period LAI data (long-term averages)
-lai <- rast(list.files(path = "data/work/reference/lai/qa1/p13y/", pattern = "LAI", full.names = TRUE))
+lai <- rast(list.files(path = "data/work/reference/lai/qa1/p10y/", pattern = "LAI", full.names = TRUE))
 
 # Load forest type mask with 66% coverage threshold
 mask <- rast("data/work/mask/mask_66p.tif")

@@ -41,7 +41,7 @@ paths_evi  <- list.files(path = path, pattern = "EVI_",  full.names = TRUE)
 paths_nirv <- list.files(path = path, pattern = "NIRv_", full.names = TRUE)
 
 # Get LAI reference data path
-paths_lai <- list.files(path = "data/work/reference/lai/qa1/P13Y", pattern = "LAI", full.names = TRUE)
+paths_lai <- list.files(path = "data/work/reference/lai/qa1/P10Y", pattern = "LAI", full.names = TRUE)
 
 # 03 CREATE REFERENCE PERIOD DATA CUBES -----------------------------------
 
