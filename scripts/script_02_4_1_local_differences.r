@@ -42,7 +42,7 @@ paths_evi  <- list.files(path = path, pattern = "EVI_",  full.names = TRUE)
 paths_nirv <- list.files(path = path, pattern = "NIRv_", full.names = TRUE)
 
 # Get LAI reference data path (Note: using P13Y from original script)
-paths_lai <- list.files(path = "data/work/reference/lai/qa1/P13Y", pattern = "LAI", full.names = TRUE)
+paths_lai <- list.files(path = "data/work/reference/lai/qa1/P10Y", pattern = "LAI", full.names = TRUE)
 
 # 03 CREATE REFERENCE PERIOD DATA CUBES -----------------------------------
 
@@ -254,6 +254,11 @@ keep(df_dif_abs_loc,
 save(df_dif_abs_loc, file = "data/work/dataframes/df_dif_absolute_local.RData")
 save(df_dif_rel_loc, file = "data/work/dataframes/df_dif_relative_local.RData")
 
+write_xlsx(df_dif_abs_loc, path = "output/differences_absolute_local.xlsx")
+write_xlsx(df_dif_rel_loc, path = "output/differences_relative_local.xlsx")
+
 # Save long format dataframes
 save(df_dif_abs_loc_long, file = "data/work/dataframes/df_dif_absolute_local_long.RData")
 save(df_dif_rel_loc_long, file = "data/work/dataframes/df_dif_relative_local_long.RData")
+
+

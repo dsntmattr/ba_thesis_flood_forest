@@ -11,10 +11,11 @@
 # Spatial data processing
 library(terra)       # Spatial raster data analysis
 
-# Data manipulation
+# Data manipulation and output
 library(dplyr)       # Data manipulation and transformation
 library(gdata)       # Additional data manipulation tools
 library(tidyr)       # Data tidying and reshaping
+library(writexl)     # Write Excel files
 
 # ==============================================================================
 # PART 01: REFERENCE PERIOD DATA PROCESSING
@@ -296,6 +297,9 @@ keep(df_dif_abs_reg,
 # Save regional difference dataframes in wide format
 save(df_dif_abs_reg, file = "data/work/dataframes/df_dif_absolute_regional.RData")
 save(df_dif_rel_reg, file = "data/work/dataframes/df_dif_relative_regional.RData")
+
+write_xlsx(df_dif_abs_reg, path = "output/differences_absolute_regional.xlsx")
+write_xlsx(df_dif_rel_reg, path = "output/differences_relative_regional.xlsx")
  
 # Save regional difference dataframes in long format (for visualization)
 save(df_dif_abs_reg_long, file = "data/work/dataframes/df_dif_absolute_regional_long.RData")
