@@ -55,52 +55,7 @@ get_data = function(aoi, toi, out, pre) {
     items_sign(sign_fn = sign_planetary_computer())
   
   # Extract coordinate reference system from first item
-  wkt2 <- it.obj$features[[1]]$properties# ==============================================================================
-# SCRIPT: Download, Aggregate and Rescale MODIS Data
-# PURPOSE: Download MODIS NBAR and LAI data, aggregate to monthly composites,
-#          and rescale values for analysis
-# AUTHOR: [Your Name]
-# DATE: [Current Date]
-# ==============================================================================
-
-# PART 01: MODIS Nadir BRDF-Adjusted Reflectance (NBAR) Daily
-#   - Aggregate to one image per month using mean values for each cell
-#   - Rescale cell values to 0-1 range by dividing by 10000
-
-# PART 02: MODIS Leaf Area Index/FPAR 8-Day
-#   - Create cubes with one image per 8-day period
-#   - Apply quality masking using quality bands
-#   - Rescale cell values by multiplying with factor 0.1
-#   - Aggregate to one image per month using mean values
-
-# 00 LOAD REQUIRED PACKAGES -----------------------------------------------
-
-# Spatial data processing
-library(gdalcubes)   # Processing raster data cubes
-library(sf)          # Simple features for vector data
-
-# Data access
-library(rstac)       # Access to STAC catalogs
-
-# Data manipulation
-library(magrittr)    # Pipe operators for data processing
-
-# ==============================================================================
-# PART 01: MODIS NBAR DAILY DATA PROCESSING
-# ==============================================================================
-
-# 01 DEFINE DATA DOWNLOAD FUNCTION ----------------------------------------
-
-# Function to download and process MODIS NBAR data
-# Parameters:
-#   aoi: Area of interest as bounding box vector
-#   toi: Time of interest as date range string (e.g., "2000-05-01/2000-09-30")
-#   out: Output directory path
-#   pre: Prefix for output file names
-
-get_data = function(aoi, toi, out, pre) {
-  
-proj:wkt2`
+  wkt2 <- it.obj$features[[1]]$properties$`proj:wkt2`
   
   # Extract acquisition dates from all items
   img.dates <- NULL
@@ -222,52 +177,7 @@ get_data = function(aoi, toi, out, pre) {
     items_sign(sign_fn = sign_planetary_computer())
   
   # Extract coordinate reference system from first item
-  wkt2 <- it.obj$features[[1]]$properties# ==============================================================================
-# SCRIPT: Download, Aggregate and Rescale MODIS Data
-# PURPOSE: Download MODIS NBAR and LAI data, aggregate to monthly composites,
-#          and rescale values for analysis
-# AUTHOR: [Your Name]
-# DATE: [Current Date]
-# ==============================================================================
-
-# PART 01: MODIS Nadir BRDF-Adjusted Reflectance (NBAR) Daily
-#   - Aggregate to one image per month using mean values for each cell
-#   - Rescale cell values to 0-1 range by dividing by 10000
-
-# PART 02: MODIS Leaf Area Index/FPAR 8-Day
-#   - Create cubes with one image per 8-day period
-#   - Apply quality masking using quality bands
-#   - Rescale cell values by multiplying with factor 0.1
-#   - Aggregate to one image per month using mean values
-
-# 00 LOAD REQUIRED PACKAGES -----------------------------------------------
-
-# Spatial data processing
-library(gdalcubes)   # Processing raster data cubes
-library(sf)          # Simple features for vector data
-
-# Data access
-library(rstac)       # Access to STAC catalogs
-
-# Data manipulation
-library(magrittr)    # Pipe operators for data processing
-
-# ==============================================================================
-# PART 01: MODIS NBAR DAILY DATA PROCESSING
-# ==============================================================================
-
-# 01 DEFINE DATA DOWNLOAD FUNCTION ----------------------------------------
-
-# Function to download and process MODIS NBAR data
-# Parameters:
-#   aoi: Area of interest as bounding box vector
-#   toi: Time of interest as date range string (e.g., "2000-05-01/2000-09-30")
-#   out: Output directory path
-#   pre: Prefix for output file names
-
-get_data = function(aoi, toi, out, pre) {
-  
-proj:wkt2`
+  wkt2 <- it.obj$features[[1]]$properties$`proj:wkt2`
   
   # Extract acquisition dates from all items
   img.dates <- NULL
