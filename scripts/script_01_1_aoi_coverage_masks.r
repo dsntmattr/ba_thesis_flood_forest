@@ -19,6 +19,21 @@ library(rstac)       # Access to STAC (SpatioTemporal Asset Catalog) endpoints
 # Data manipulation
 library(tidyverse)   # Collection of data science packages
 
+# ==============================================================================
+# SETUP: Create required directories
+# ==============================================================================
+
+required_dirs <- c(
+  "data/work/aoi/",
+  "data/work/crs/",
+  "data/work/mask/"
+)
+
+# Create all directories
+for (dir in required_dirs) {
+  dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+}
+
 # 01 CREATE FLOODED FOREST INTERSECTION -----------------------------------
 # Intersect floodplains and forest areas to define study area
 
@@ -38,7 +53,10 @@ forest <- forest %>%
 flood_forest <- st_intersection(floodplains, forest)        # Calculate spatial intersection
 
 # Save the flooded forest intersection
-st_write(flood_forest, "data/work/flood_forest.shp")        # Export as shapefile
+if (!dir.exists("data/work/aoi/")) {
+  dir.create("data/work/aoi/", recursive = TRUE)
+}
+st_write(flood_forest, "data/work/aoi/flood_forest.shp")        # Export as shapefile
 
 # 02 CREATE BASE GRID FOR ANALYSIS ----------------------------------------
 # Generate a base grid covering the entire study area as template for masks
@@ -50,11 +68,11 @@ rm(list=ls())
 s.obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
 
 # Load AOI and get bounding box
-sf <- st_read("data/work/flood_forest.shp")                 # Read flooded forest data
+sf <- st_read("data/work/aoi/flood_forest.shp")                 # Read flooded forest data
 sf <- st_transform(sf, crs = 4326)                          # Transform to WGS84 (EPSG:4326)
 bbox <- st_bbox(sf)                                         # Extract bounding box
 bbox.vector <- as.vector(bbox)                              # Convert to numeric vector
-save(bbox.vector, file = "data/work/bbox.vector.RData")     # Save bounding box for later use
+save(bbox.vector, file = "data/work/aoi/bbox.vector.RData")     # Save bounding box for later use
 
 # Download MODIS scenes for base grid creation
 toi <- "2013-05-01/2013-05-02"                              # Set time period of interest (2 days)
@@ -73,6 +91,8 @@ it.obj
 
 # Extract coordinate reference system from MODIS data
 wkt2 <- it.obj$features[[1]]$properties$`proj:wkt2`
+# Save crs as character vector
+save(wkt2, file = "data/work/crs/wkt2.RData")
 
 # Define bands to extract for base grid
 assets <- c("Nadir_Reflectance_Band1")                      # Red band for base grid creation
@@ -133,7 +153,8 @@ rm(list=ls())
 r <- rast("data/work/MODIS_BASEGRID_2013-05-01.tif")        # Read base grid
 
 # Set coordinate reference system (assignment only, no transformation)
-crs(r) <- ("PROJCS[\"unnamed\",GEOGCS[\"Unknown datum based upon the custom spheroid\",DATUM[\"Not specified (based on custom spheroid)\",SPHEROID[\"Custom spheroid\",6371007.181,0]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Sinusoidal\"],PARAMETER[\"longitude_of_center\",0],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"Meter\",1],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]")
+load("data/work/crs/wkt2.RData")
+crs(r) <- wkt2
 
 # Vectorize the base grid
 r <- setValues(r, 1:(ncell(r)))                             # Assign unique cell IDs to prevent merging
@@ -142,7 +163,7 @@ r.sf <- st_as_sf(r.sf)                                      # Convert to sf obje
 r.sf <- rename(r.sf, id_mask = Nadir_Reflectance_Band1)     # Rename ID column
 
 # Load and process flooded forest data
-sf <- st_read("data/work/flood_forest.shp")                 # Load flooded forest intersection
+sf <- st_read("data/work/aoi/flood_forest.shp")                 # Load flooded forest intersection
 sf <- st_transform(sf, crs(r))                              # Transform to base grid CRS
 
 # Clip flooded forest to base grid extent
@@ -170,14 +191,19 @@ cov_mix <- rasterize(for_mix_int, r, cover = TRUE)          # Mixed coverage
 cov_all <- c(cov_bro, cov_con, cov_mix)
 
 # Save coverage layers
-writeRaster(cov_all, "data/work/coverage.tif")
+writeRaster(cov_all, "data/work/mask/coverage.tif")
+
+# clean up temporary files (base grid) 
+
+trash <- list.files("data/work/", pattern = "BASEGRID", full.names = TRUE)
+file.remove(trash)
 
 # 04 CREATE FOREST MASKS WITH DIFFERENT THRESHOLDS -----------------------
 # Generate binary masks based on different coverage thresholds
 
 # Load coverage layers (optional: clear environment first)
 # rm(list=ls())
-cov_all <- rast("data/work/coverage.tif")
+cov_all <- rast("data/work/mask/coverage.tif")
 
 # Define function to create binary masks based on coverage thresholds
 # Values below threshold = NA (masked out)
@@ -207,9 +233,9 @@ mask_90p <- create_mask(cov_all, 0.9)                       # 90% coverage thres
 mask_99p <- create_mask(cov_all, 0.99)                      # 99% coverage threshold
 
 # Save all mask layers as GeoTIFF files
-writeRaster(mask_30p, "data/work/mask_30p.tif")
-writeRaster(mask_50p, "data/work/mask_50p.tif")
-writeRaster(mask_70p, "data/work/mask_70p.tif")
-writeRaster(mask_66p, "data/work/mask_66p.tif")
-writeRaster(mask_90p, "data/work/mask_90p.tif")
-writeRaster(mask_99p, "data/work/mask_99p.tif")
+writeRaster(mask_30p, "data/work/mask/mask_30p.tif")
+writeRaster(mask_50p, "data/work/mask/mask_50p.tif")
+writeRaster(mask_70p, "data/work/mask/mask_70p.tif")
+writeRaster(mask_66p, "data/work/mask/mask_66p.tif")
+writeRaster(mask_90p, "data/work/mask/mask_90p.tif")
+writeRaster(mask_99p, "data/work/mask/mask_99p.tif")
