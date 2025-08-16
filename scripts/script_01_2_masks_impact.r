@@ -17,6 +17,26 @@ library(tidyverse)   # Collection of data science packages
 library(gdata)       # Additional data manipulation tools
 library(writexl)     # Write Excel files
 
+# ==============================================================================
+# SETUP: Create required directories
+# ==============================================================================
+
+required_dirs <- c(
+  "output"
+)
+
+# Create all directories
+for (dir in required_dirs) {
+  dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+}
+
+
+# Set row names and column names for output tables ------------------------
+
+# Add descriptive row and column names
+new_rownames <- c("No mask", "30%", "50%", "66%", "70%", "90%", "99%")
+new_colnames <- c("Broad (ha)", "Conifer (ha)", "Mixed (ha)")
+
 # 01 LOAD INPUT DATA -------------------------------------------------------
 
 # Load coverage layers (forest type coverage percentages)
@@ -101,12 +121,13 @@ df <- bind_cols(df_bro, df_con, df_mix)
 # Example: cell with 50% forest coverage = 0.5 × 25 = 12.5 ha
 df <- df * 25
 
-# Add descriptive row and column names
-row.names(df) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
-colnames(df) <- c("Broad (ha)", "Conifer (ha)", "Mixed (ha)")
-
 # Round values to whole hectares
 df <- round(df)
+
+# Add descriptive names
+df$Mask      <- new_rownames
+colnames(df) <- new_colnames
+
 df_area_absolute <- df
 
 # 05 CALCULATE RELATIVE AREAS ----------------------------------------------
@@ -120,12 +141,14 @@ df_mix_perc <- data.frame(df$Mixed/df$Mixed[[1]] * 100)     # Mixed percentages
 # Combine percentage dataframes
 df_perc <- bind_cols(df_bro_perc, df_con_perc, df_mix_perc)
 
-# Add descriptive names
-row.names(df_perc) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
-colnames(df_perc) <- c("Broad (%)", "Conifer (%)", "Mixed (%)")
-
 # Round to whole percentages
-df_area_relative <- round(df_perc)
+df_perc <- round(df_perc)
+
+# Add descriptive names
+df_perc$Mask      <- new_rownames
+colnames(df_perc) <- new_colnames
+
+df_area_relative <- df_perc
 
 # 06 COUNT PIXELS/CELLS ----------------------------------------------------
 # Count number of valid (non-NA) cells for each mask and forest type
@@ -171,8 +194,8 @@ vec_mix_cells <- c(cells_coverage_mix, cells_mask_mix_30p, cells_mask_mix_50p,
 df <- data.frame(vec_bro_cells, vec_con_cells, vec_mix_cells)
 
 # Add descriptive names
-row.names(df) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
-colnames(df) <- c("Broad (ncells)", "Conifer (ncells)", "Mixed (ncells)")
+df$Mask      <- new_rownames
+colnames(df) <- new_colnames
 
 df_pixels_absolute <- df
 
@@ -187,12 +210,13 @@ df_mix_ncells_perc <- data.frame(df[3]/df[[3]][1] * 100)    # Mixed pixel percen
 # Combine percentage dataframes
 df_perc <- bind_cols(df_bro_ncells_perc, df_con_ncells_perc, df_mix_ncells_perc)
 
-# Add descriptive names
-row.names(df_perc) <- c("Total", "30%", "50%", "66%", "70%", "90%", "99%")
-colnames(df_perc) <- c("Broad (ncells%)", "Conifer (ncells%)", "Mixed (ncells%)")
-
 # Round to one decimal place
 df_perc <- round(df_perc, digits = 1)
+
+# Add descriptive names
+df_perc$Mask      <- new_rownames
+colnames(df_perc) <- new_colnames
+
 df_pixels_relative <- df_perc
 
 # 08 CLEAN ENVIRONMENT AND SAVE RESULTS -----------------------------------
@@ -205,7 +229,12 @@ keep(df_area_absolute,
      sure = TRUE)
 
 # Create list of all result dataframes for Excel export
-result_list <- list(df_area_absolute, df_area_relative, df_pixels_absolute, df_pixels_relative)
+result_list <- list(
+  "Area Absolute"   = df_area_absolute,
+  "Area Relative"   = df_area_relative,
+  "Pixels Absolute" = df_pixels_absolute,
+  "Pixels Relative" = df_pixels_relative
+)
 
 # Export all results to Excel file with multiple sheets
 write_xlsx(result_list, path = "output/remaining_area_and_pixels.xlsx")
