@@ -125,8 +125,9 @@ df <- df * 25
 df <- round(df)
 
 # Add descriptive names
-df$Mask      <- new_rownames
 colnames(df) <- new_colnames
+df$Mask      <- new_rownames
+
 
 df_area_absolute <- df
 
@@ -145,8 +146,8 @@ df_perc <- bind_cols(df_bro_perc, df_con_perc, df_mix_perc)
 df_perc <- round(df_perc)
 
 # Add descriptive names
-df_perc$Mask      <- new_rownames
 colnames(df_perc) <- new_colnames
+df_perc$Mask      <- new_rownames
 
 df_area_relative <- df_perc
 
@@ -194,8 +195,8 @@ vec_mix_cells <- c(cells_coverage_mix, cells_mask_mix_30p, cells_mask_mix_50p,
 df <- data.frame(vec_bro_cells, vec_con_cells, vec_mix_cells)
 
 # Add descriptive names
-df$Mask      <- new_rownames
 colnames(df) <- new_colnames
+df$Mask      <- new_rownames
 
 df_pixels_absolute <- df
 
@@ -214,8 +215,9 @@ df_perc <- bind_cols(df_bro_ncells_perc, df_con_ncells_perc, df_mix_ncells_perc)
 df_perc <- round(df_perc, digits = 1)
 
 # Add descriptive names
-df_perc$Mask      <- new_rownames
 colnames(df_perc) <- new_colnames
+df_perc$Mask      <- new_rownames
+
 
 df_pixels_relative <- df_perc
 
