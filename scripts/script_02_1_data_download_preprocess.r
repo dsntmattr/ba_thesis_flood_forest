@@ -32,7 +32,7 @@ library(magrittr)    # Pipe operators for data processing
 # PART 01: MODIS NBAR DAILY DATA PROCESSING
 # ==============================================================================
 
-# 01 DEFINE DATA DOWNLOAD FUNCTION ----------------------------------------
+# 01 DEFINE NBAR DATA DOWNLOAD FUNCTION ----------------------------------------
 
 # Function to download and process MODIS NBAR data
 # Parameters:
@@ -41,7 +41,7 @@ library(magrittr)    # Pipe operators for data processing
 #   out: Output directory path
 #   pre: Prefix for output file names
 
-get_data = function(aoi, toi, out, pre) {
+get_nbar = function(aoi, toi, out, pre) {
   
   # Connect to STAC catalog
   s.obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
@@ -119,41 +119,41 @@ get_data = function(aoi, toi, out, pre) {
 # 02 SET PROCESSING PARAMETERS ---------------------------------------------
 
 # Load bounding box from previous processing step
-load("data/work/bbox.vector.RData")    
+load("data/work/aoi/bbox.vector.RData")    
 aoi <- bbox.vector                                          # Area of interest
-pre <- 'MODIS_'                                            # File prefix
+pre <- 'NBAR_'                                            # File prefix
 
 # 03 PROCESS REFERENCE PERIOD DATA ----------------------------------------
 # Download and process MODIS NBAR data for reference period (2000-2012)
 
-out <- "data/work/reference/P1M/"                          # Output directory
+out <- "data/work/reference/nbar/p1m/"                          # Output directory
 
 # Process each year of reference period (May-September growing season)
-get_data(aoi, toi = "2000-05-01/2000-09-30", out, pre)
-get_data(aoi, toi = "2001-05-01/2001-09-30", out, pre)
-get_data(aoi, toi = "2002-05-01/2002-09-30", out, pre)
-get_data(aoi, toi = "2003-05-01/2003-09-30", out, pre)
-get_data(aoi, toi = "2004-05-01/2004-09-30", out, pre)
-get_data(aoi, toi = "2005-05-01/2005-09-30", out, pre)
-get_data(aoi, toi = "2006-05-01/2006-09-30", out, pre)
-get_data(aoi, toi = "2007-05-01/2007-09-30", out, pre)
-get_data(aoi, toi = "2008-05-01/2008-09-30", out, pre)
-get_data(aoi, toi = "2009-05-01/2009-09-30", out, pre)
-get_data(aoi, toi = "2010-05-01/2010-09-30", out, pre)
-get_data(aoi, toi = "2011-05-01/2011-09-30", out, pre)
-get_data(aoi, toi = "2012-05-01/2012-09-30", out, pre)
+get_nbar(aoi, toi = "2000-05-01/2000-09-30", out, pre)
+get_nbar(aoi, toi = "2001-05-01/2001-09-30", out, pre)
+get_nbar(aoi, toi = "2002-05-01/2002-09-30", out, pre)
+get_nbar(aoi, toi = "2003-05-01/2003-09-30", out, pre)
+get_nbar(aoi, toi = "2004-05-01/2004-09-30", out, pre)
+get_nbar(aoi, toi = "2005-05-01/2005-09-30", out, pre)
+get_nbar(aoi, toi = "2006-05-01/2006-09-30", out, pre)
+get_nbar(aoi, toi = "2007-05-01/2007-09-30", out, pre)
+get_nbar(aoi, toi = "2008-05-01/2008-09-30", out, pre)
+get_nbar(aoi, toi = "2009-05-01/2009-09-30", out, pre)
+get_nbar(aoi, toi = "2010-05-01/2010-09-30", out, pre)
+get_nbar(aoi, toi = "2011-05-01/2011-09-30", out, pre)
+get_nbar(aoi, toi = "2012-05-01/2012-09-30", out, pre)
 
 # 04 PROCESS STUDY PERIOD DATA --------------------------------------------
 # Download and process MODIS NBAR data for study period (2013-2017)
 
-out <- "data/work/study/P1M/"                              # Output directory
+out <- "data/work/study/nbar/"                              # Output directory
 
 # Process each year of study period (May-September growing season)
-get_data(aoi, toi = "2013-05-01/2013-09-30", out, pre)
-get_data(aoi, toi = "2014-05-01/2014-09-30", out, pre)
-get_data(aoi, toi = "2015-05-01/2015-09-30", out, pre)
-get_data(aoi, toi = "2016-05-01/2016-09-30", out, pre)
-get_data(aoi, toi = "2017-05-01/2017-09-30", out, pre)
+get_nbar(aoi, toi = "2013-05-01/2013-09-30", out, pre)
+get_nbar(aoi, toi = "2014-05-01/2014-09-30", out, pre)
+get_nbar(aoi, toi = "2015-05-01/2015-09-30", out, pre)
+get_nbar(aoi, toi = "2016-05-01/2016-09-30", out, pre)
+get_nbar(aoi, toi = "2017-05-01/2017-09-30", out, pre)
 
 # ==============================================================================
 # PART 02: MODIS LEAF AREA INDEX/FPAR 8-DAY DATA PROCESSING
@@ -163,7 +163,7 @@ get_data(aoi, toi = "2017-05-01/2017-09-30", out, pre)
 
 # Function to download and process MODIS LAI data
 # Parameters same as get_data function above
-get_data = function(aoi, toi, out, pre) {
+get_lai = function(aoi, toi, out, pre) {
   
   # Connect to STAC catalog
   s.obj <- stac("https://planetarycomputer.microsoft.com/api/stac/v1")
@@ -187,8 +187,7 @@ get_data = function(aoi, toi, out, pre) {
   img.dates <- rev(unique(img.dates))
   
   # Define LAI band to extract
-  assets <- c("Lai_500m")                                   # LAI at 500m resolution
-  # Note: Quality bands "FparLai_QC", "FparExtra_QC" available but not used here
+  assets <- c("Lai_500m", "FparLai_QC")                                 
   collection <- stac_image_collection(it.obj$features, asset_names = assets)
   
   # Define spatial extent for data cube
@@ -197,8 +196,8 @@ get_data = function(aoi, toi, out, pre) {
   xmax <- aoi[3]
   ymax <- aoi[4]
   aoi.extent <- st_bbox(c(xmin = xmin, xmax = xmax,
-                         ymin = ymin, ymax = ymax),
-                       crs = 4326)
+                          ymin = ymin, ymax = ymax),
+                        crs = 4326)
   aoi.extent <- aoi.extent %>% st_as_sfc() %>% st_as_sf()
   
   # Project AOI to satellite image projection
@@ -217,10 +216,7 @@ get_data = function(aoi, toi, out, pre) {
                 dt = "P8D")                                 # Temporal resolution: 8 days
   
   # Create raster cube with optional quality masking and rescaling
-  cube = raster_cube(collection, v) |>
-    # Optional quality masking (commented out):
-    # mask = image_mask("FparLai_QC", values = 0, invert = TRUE)
-    # filter_pixel("FparExtra_QC == 0") |>
+  cube = raster_cube(collection, v, mask = image_mask("FparLai_QC", values = 0, invert = TRUE)) |>
     apply_pixel(c("Lai_500m * 0.1"), c("x1"))              # Rescale LAI values by factor 0.1
   
   # Aggregate 8-day data to monthly means
@@ -242,14 +238,14 @@ pre <- "LAI_"                                              # File prefix
 # 07 PROCESS REFERENCE PERIOD LAI DATA -----------------------------------
 
 # Create vector with time periods for reference period
-years <- 2003:2012                                          # LAI reference period (10 years)
+years <- 2000:2012                                          # LAI reference period (10 years)
 toi_vec <- paste0(years, "-05-01/", years, "-09-30")       # May-September for each year
 
-out <- "data/work/reference/lai/no_qa/p1m"                 # Output directory
+out <- "data/work/reference/lai/p1m/"                 # Output directory
 
 # Process each year of reference period
 for (toi in toi_vec) {
-  get_data(aoi, toi = toi, out, pre)
+  get_lai(aoi, toi = toi, out, pre)
 }
 
 # Remove unwanted October files (artifacts from processing)
@@ -258,7 +254,7 @@ file.remove(trash)
 
 # 08 PROCESS STUDY PERIOD LAI DATA ----------------------------------------
 
-out <- "data/work/study/lai/no_qa/p1m"                     # Output directory
+out <- "data/work/study/lai/"                     # Output directory
 
 # Create vector with time periods for study period
 years <- 2013:2017                                          # Study period (5 years)
