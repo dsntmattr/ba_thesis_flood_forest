@@ -116,44 +116,41 @@ get_nbar = function(aoi, toi, out, pre) {
             prefix = pre)
 }
 
-# 02 SET PROCESSING PARAMETERS ---------------------------------------------
+# 02 SET NBAR PROCESSING PARAMETERS ---------------------------------------------
 
-# Load bounding box from previous processing step
-load("data/work/aoi/bbox.vector.RData")    
-aoi <- bbox.vector                                          # Area of interest
-pre <- 'NBAR_'                                            # File prefix
+load("data/work/aoi/bbox.vector.RData")                             # Bounding box ("bbox.vector")
+aoi <- bbox.vector                                                  # Area of interest
+pre <- 'NBAR_'                                                      # File prefix
+
+# Time of interest
+# Reference
+years_reference <- 2000:2012                                                            # LAI reference period (12 years)
+toi_vector_reference <- paste0(years_reference, "-05-01/", years_reference, "-09-30")   # May-September for each year
+
+out_reference <- "data/work/reference/nbar/p1m/"                                        # Output directory
+
+# Study
+years_study <- 2013:2017                                                                # Study period (5 years)
+toi_vector_study <- paste0(years_study, "-05-01/", years_study, "-09-30")               # May-September for each year
+
+out_study <- "data/work/study/nbar/"                                                    # Output directory
 
 # 03 PROCESS REFERENCE PERIOD DATA ----------------------------------------
 # Download and process MODIS NBAR data for reference period (2000-2012)
 
-out <- "data/work/reference/nbar/p1m/"                          # Output directory
+# Process each year of reference period
 
-# Process each year of reference period (May-September growing season)
-get_nbar(aoi, toi = "2000-05-01/2000-09-30", out, pre)
-get_nbar(aoi, toi = "2001-05-01/2001-09-30", out, pre)
-get_nbar(aoi, toi = "2002-05-01/2002-09-30", out, pre)
-get_nbar(aoi, toi = "2003-05-01/2003-09-30", out, pre)
-get_nbar(aoi, toi = "2004-05-01/2004-09-30", out, pre)
-get_nbar(aoi, toi = "2005-05-01/2005-09-30", out, pre)
-get_nbar(aoi, toi = "2006-05-01/2006-09-30", out, pre)
-get_nbar(aoi, toi = "2007-05-01/2007-09-30", out, pre)
-get_nbar(aoi, toi = "2008-05-01/2008-09-30", out, pre)
-get_nbar(aoi, toi = "2009-05-01/2009-09-30", out, pre)
-get_nbar(aoi, toi = "2010-05-01/2010-09-30", out, pre)
-get_nbar(aoi, toi = "2011-05-01/2011-09-30", out, pre)
-get_nbar(aoi, toi = "2012-05-01/2012-09-30", out, pre)
+# Process each year of reference period
+for (toi in toi_vector_reference) {
+  get_nbar(aoi, toi = toi, out_reference, pre)
+}
 
 # 04 PROCESS STUDY PERIOD DATA --------------------------------------------
 # Download and process MODIS NBAR data for study period (2013-2017)
-
-out <- "data/work/study/nbar/"                              # Output directory
-
 # Process each year of study period (May-September growing season)
-get_nbar(aoi, toi = "2013-05-01/2013-09-30", out, pre)
-get_nbar(aoi, toi = "2014-05-01/2014-09-30", out, pre)
-get_nbar(aoi, toi = "2015-05-01/2015-09-30", out, pre)
-get_nbar(aoi, toi = "2016-05-01/2016-09-30", out, pre)
-get_nbar(aoi, toi = "2017-05-01/2017-09-30", out, pre)
+for (toi in toi_vector_study) {
+  get_nbar(aoi, toi = toi, out_study, pre)
+}
 
 # ==============================================================================
 # PART 02: MODIS LEAF AREA INDEX/FPAR 8-DAY DATA PROCESSING
@@ -230,45 +227,44 @@ get_lai = function(aoi, toi, out, pre) {
 
 # 06 SET LAI PROCESSING PARAMETERS ----------------------------------------
 
-# Load bounding box from previous processing step
-load("data/work/aoi/bbox.vector.RData")
-aoi <- bbox.vector                                          # Area of interest
+load("data/work/aoi/bbox.vector.RData")                    # Bounding box ("bbox.vector")
+aoi <- bbox.vector                                         # Area of interest
 pre <- "LAI_"                                              # File prefix
+
+# Time of interest
+# Reference
+years_reference <- 2000:2012                                                            # LAI reference period (12 years)
+toi_vector_reference <- paste0(years_reference, "-05-01/", years_reference, "-09-30")   # May-September for each year
+
+out_reference <- "data/work/reference/lai/p1m/"                                         # Output directory
+
+# Study
+years_study <- 2013:2017                                                                # Study period (5 years)
+toi_vector_study <- paste0(years_study, "-05-01/", years_study, "-09-30")               # May-September for each year
+
+out_study <- "data/work/study/lai/"                                                     # Output directory
 
 # 07 PROCESS REFERENCE PERIOD LAI DATA -----------------------------------
 
-# Create vector with time periods for reference period
-years <- 2000:2012                                          # LAI reference period (10 years)
-toi_vec <- paste0(years, "-05-01/", years, "-09-30")       # May-September for each year
-
-out <- "data/work/reference/lai/p1m/"                 # Output directory
-
 # Process each year of reference period
-for (toi in toi_vec) {
-  get_lai(aoi, toi = toi, out, pre)
+for (toi in toi_vector_reference) {
+  get_lai(aoi, toi = toi, out_reference, pre)
 }
-
-# Remove unwanted October files (artifacts from processing)
-trash <- list.files(out, pattern = "10-01", full.names = TRUE)
-file.remove(trash)
 
 # 08 PROCESS STUDY PERIOD LAI DATA ----------------------------------------
 
-out <- "data/work/study/lai/"                     # Output directory
-
-# Create vector with time periods for study period
-years <- 2013:2017                                          # Study period (5 years)
-toi_vec <- paste0(years, "-05-01/", years, "-09-30")       # May-September for each year
-
 # Process each year of study period
-for (toi in toi_vec) {
-  get_data(aoi, toi = toi, out, pre)
+for (toi in toi_vector_study) {
+  get_lai(aoi, toi = toi, out_study, pre)
 }
 
 # 09 CLEAN UP TEMPORARY FILES ---------------------------------------------
 
 # Remove unwanted October files (artifacts from processing)
-trash <- list.files(out, pattern = "10-01", full.names = TRUE)
+trash <- list.files(out_reference, pattern = "10-01", full.names = TRUE)
+file.remove(trash)
+
+trash <- list.files(out_study, pattern = "10-01", full.names = TRUE)
 file.remove(trash)
 
 # Optional: Remove auxiliary files if present
