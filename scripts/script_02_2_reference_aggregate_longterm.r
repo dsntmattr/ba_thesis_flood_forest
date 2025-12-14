@@ -16,28 +16,28 @@ library(gdalcubes)   # Processing raster data cubes
 # ==============================================================================
 
 # 01 LOAD AND ORGANIZE MONTHLY DATA ---------------------------------------
+# Set path to NBAR data
+path = "data/work/reference/nbar/p1m/"
 
 # Get file paths for each month across all reference years
-paths_05 <- list.files(path = "data/work/reference/P1M", pattern = "-05-", full.names = TRUE)
-paths_06 <- list.files(path = "data/work/reference/P1M", pattern = "-06-", full.names = TRUE)
-paths_07 <- list.files(path = "data/work/reference/P1M", pattern = "-07-", full.names = TRUE)
-paths_08 <- list.files(path = "data/work/reference/P1M", pattern = "-08-", full.names = TRUE)
-paths_09 <- list.files(path = "data/work/reference/P1M", pattern = "-09-", full.names = TRUE)
+paths_05 <- list.files(path = path, pattern = "-05-", full.names = TRUE)
+paths_06 <- list.files(path = path, pattern = "-06-", full.names = TRUE)
+paths_07 <- list.files(path = path, pattern = "-07-", full.names = TRUE)
+paths_08 <- list.files(path = path, pattern = "-08-", full.names = TRUE)
+paths_09 <- list.files(path = path, pattern = "-09-", full.names = TRUE)
 
 # 02 CREATE MONTHLY STACKS ------------------------------------------------
 # Stack rasters from same month across all years (2000-2012)
 
 # Create datetime labels for each year in reference period
-datetime_labels_nbar <- c("2000-05", "2001-05", "2002-05", "2003-05", "2004-05", 
-                         "2005-05", "2006-05", "2007-05", "2008-05", "2009-05",
-                         "2010-05", "2011-05", "2012-05")
+years <- 2000:2012
 
 # Stack cubes by month (one cube per month containing all years)
-cube_05 <- stack_cube(paths_05, datetime_values = datetime_labels_nbar)
-cube_06 <- stack_cube(paths_06, datetime_values = gsub("-05", "-06", datetime_labels_nbar))
-cube_07 <- stack_cube(paths_07, datetime_values = gsub("-05", "-07", datetime_labels_nbar))
-cube_08 <- stack_cube(paths_08, datetime_values = gsub("-05", "-08", datetime_labels_nbar))
-cube_09 <- stack_cube(paths_09, datetime_values = gsub("-05", "-09", datetime_labels_nbar))
+cube_05 <- stack_cube(paths_05, datetime_values = paste0(years, "-05"))
+cube_06 <- stack_cube(paths_06, datetime_values = paste0(years, "-06"))
+cube_07 <- stack_cube(paths_07, datetime_values = paste0(years, "-07"))
+cube_08 <- stack_cube(paths_08, datetime_values = paste0(years, "-08"))
+cube_09 <- stack_cube(paths_09, datetime_values = paste0(years, "-09"))
 
 # 03 CALCULATE LONG-TERM MONTHLY AVERAGES ---------------------------------
 # Reduce temporal dimension by calculating mean across all years
@@ -52,8 +52,8 @@ cube_09_P13Y <- reduce_time(cube_09, "mean(x1)", "mean(x2)", "mean(x3)")  # Sept
 # 04 SAVE REFERENCE PERIOD AVERAGES ---------------------------------------
 
 # Define output parameters
-prefix <- "MODIS_"                                          # File prefix
-dir <- "data/work/reference/P13Y/"                         # Output directory
+prefix <- "NBAR_"                                          # File prefix
+dir <- "data/work/reference/nbar/p13y/test/"               # Output directory
 
 # Save long-term monthly averages
 write_tif(cube_05_P13Y, dir = dir, prefix = prefix)        # May reference
@@ -69,7 +69,7 @@ write_tif(cube_09_P13Y, dir = dir, prefix = prefix)        # September reference
 # 05 LOAD AND ORGANIZE LAI MONTHLY DATA ----------------------------------
 
 # Set path to LAI data
-path = "data/work/reference/lai/no_qa/p1m"
+path = "data/work/reference/lai/p1m/"
 
 # Get file paths for each month across all LAI reference years
 paths_05 <- list.files(path = path, pattern = "-05-", full.names = TRUE)
@@ -79,7 +79,7 @@ paths_08 <- list.files(path = path, pattern = "-08-", full.names = TRUE)
 paths_09 <- list.files(path = path, pattern = "-09-", full.names = TRUE)
 
 # Define LAI reference period (2003-2012, 10 years)
-years <- 2003:2012
+years <- 2000:2012
 
 # 06 CREATE LAI MONTHLY STACKS --------------------------------------------
 
@@ -103,7 +103,7 @@ cube_09_P13Y <- reduce_time(cube_09, "mean(x1)")           # September LAI avera
 
 # Define output parameters for LAI
 prefix <- "LAI_"                                            # File prefix
-dir <- "data/work/reference/lai/no_qa/p10y/"               # Output directory
+dir <- "data/work/reference/lai/p13y/"                      # Output directory
 
 # Save LAI long-term monthly averages
 write_tif(cube_05_P13Y, dir = dir, prefix = prefix)        # May LAI reference
