@@ -22,8 +22,8 @@ library(magrittr)    # Pipe operators for data processing
 
 # 01 LOAD REFERENCE PERIOD REFLECTANCE DATA -------------------------------
 
-# Get paths to reference period MODIS reflectance data (P13Y = 13-year averages)
-paths <- list.files(path = "data/work/reference/modis/P13Y", pattern = "MODIS", full.names = TRUE)
+# Get paths to reference period MODIS reflectance data (p13y = 13-year averages)
+paths <- list.files(path = "data/work/reference/nbar/p13y/", pattern = "NBAR", full.names = TRUE)
 
 # Define months for growing season analysis
 months <- 5:9                                               # May through September
@@ -65,7 +65,7 @@ write_tif(nirv, dir = out, prefix = 'NIRv_')                # NIRv reference
 # 04 LOAD STUDY PERIOD REFLECTANCE DATA -----------------------------------
 
 # Get paths to study period MODIS reflectance data
-paths <- list.files(path = "data/work/study/P1M", pattern = "MODIS", full.names = TRUE)
+paths <- list.files(path = "data/work/study/nbar/", pattern = "NBAR", full.names = TRUE)
 
 # Define temporal parameters for study period
 months <- 5:9                                               # May through September
