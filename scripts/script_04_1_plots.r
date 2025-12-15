@@ -9,8 +9,8 @@
 # 00 LOAD REQUIRED PACKAGES -----------------------------------------------
 
 # Visualization packages
-library(ggplot2)     # Grammar of graphics plotting system
 library(lubridate)   # Date and time manipulation
+library(ggplot2)     # Grammar of graphics plotting system
 
 # Data manipulation
 library(dplyr)       # Data manipulation and transformation
@@ -48,7 +48,7 @@ height <- 12                                                # Plot height in cm
 
 # Standard German labels used across all plots
 labs_default <- list(
-  subtitle = "Mai–September 2013–2017,\nReferenzperiode EVI, NDVI, NIRv: 2000 - 2012\nReferenzperiode LAI: 2003 - 2012\nLAI QA1",
+  subtitle = "Mai – September 2013 – 2017,\nReferenzperiode: 2000 – 2012",
   x = "Monat",                                              # Month
   y = "Abweichung (%) vom Referenzwert",                    # Deviation (%) from reference value
   color = "Index:",                                         # Index legend label
@@ -161,7 +161,11 @@ p_local <- base_plot(
 
 # Add year separation lines and save local plot
 p_local <- add_sep_lines(p_local, sep_lines_pos, c(-35, 30))
-ggsave("output/local_qa1.png", plot = p_local, bg = "white", width = width, height = height)
+
+dir_plots <- "output/plots/"
+dir.create(dir_plots, recursive = TRUE, showWarnings = FALSE)
+
+ggsave(filename = file.path(dir_plots, "local.png"), plot = p_local, bg = "white", width = width, height = height)
 
 # 12 CREATE REGIONAL OVERVIEW PLOT ----------------------------------------
 
@@ -177,7 +181,11 @@ p_regional <- base_plot(
 
 # Add year separation lines and save regional overview plot
 p_regional <- add_sep_lines(p_regional, sep_lines_pos, c(-35, 30))
-ggsave("output/regional_qa1.png", plot = p_regional, bg = "white", width = width, height = height)
+
+dir_plots <- "output/plots/"
+dir.create(dir_plots, recursive = TRUE, showWarnings = FALSE)
+
+ggsave(filename = file.path(dir_plots, "regional.png"), plot = p_regional, bg = "white", width = width, height = height)
 
 # 13 CREATE INDEX-SPECIFIC PLOTS ------------------------------------------
 
@@ -209,10 +217,14 @@ names(plots_list) <- indices_to_plot
 # 14 SAVE INDEX-SPECIFIC PLOTS --------------------------------------------
 
 # Save individual plots for each vegetation index
-ggsave("output/regional_ndvi_qa1.png", plot = plots_list[["NDVI"]], bg = "white", width = width, height = height)
-ggsave("output/regional_evi_qa1.png",  plot = plots_list[["EVI"]],  bg = "white", width = width, height = height)
-ggsave("output/regional_lai_qa1.png",  plot = plots_list[["LAI"]],  bg = "white", width = width, height = height)
-ggsave("output/regional_nirv_qa1.png", plot = plots_list[["NIRv"]], bg = "white", width = width, height = height)
+
+dir_plots <- "output/plots/"
+dir.create(dir_plots, recursive = TRUE, showWarnings = FALSE)
+
+ggsave(filename = file.path(dir_plots, "regional_ndvi.png"), plot = plots_list[["NDVI"]], bg = "white", width = width, height = height)
+ggsave(filename = file.path(dir_plots, "regional_evi.png"),  plot = plots_list[["EVI"]],  bg = "white", width = width, height = height)
+ggsave(filename = file.path(dir_plots, "regional_lai.png"),  plot = plots_list[["LAI"]],  bg = "white", width = width, height = height)
+ggsave(filename = file.path(dir_plots, "regional_nirv.png"), plot = plots_list[["NIRv"]], bg = "white", width = width, height = height)
 
 # 15 CREATE FOREST TYPE-SPECIFIC PLOTS ------------------------------------
 
@@ -237,5 +249,9 @@ plots_by_vegetation <- df_regional %>%
 # 16 SAVE FOREST TYPE-SPECIFIC PLOTS --------------------------------------
 
 # Save plots for each forest vegetation type
-ggsave("output/regional_broad_qa1.png",   plot = plots_by_vegetation[[1]], bg = "white", width = width, height = height)  # Broadleaf forests
-ggsave("output/regional_conifer_qa1.png", plot = plots_by_vegetation[[2]], bg = "white", width = width, height = height)  # Coniferous forests
+
+dir_plots <- "output/plots/"
+dir.create(dir_plots, recursive = TRUE, showWarnings = FALSE)
+
+ggsave(filename = file.path(dir_plots, "regional_broad.png"),   plot = plots_by_vegetation[[1]], bg = "white", width = width, height = height)  # Broadleaf forests
+ggsave(filename = file.path(dir_plots, "regional_conifer.png"), plot = plots_by_vegetation[[2]], bg = "white", width = width, height = height)  # Coniferous forests
