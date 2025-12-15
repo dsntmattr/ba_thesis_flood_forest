@@ -24,12 +24,12 @@ library(writexl)     # Write Excel files
 # 01 LOAD REFERENCE PERIOD DATA -------------------------------------------
 
 # Load reference period vegetation indices (long-term averages)
-ndvi <- rast(list.files(path = "data/work/reference/indices", pattern = "NDVI", full.names = TRUE))
-evi <- rast(list.files(path = "data/work/reference/indices", pattern = "EVI", full.names = TRUE))
-nirv <- rast(list.files(path = "data/work/reference/indices", pattern = "NIRv", full.names = TRUE))
+ndvi <- rast(list.files(path = "data/work/reference/indices/", pattern = "NDVI", full.names = TRUE))
+evi <- rast(list.files(path = "data/work/reference/indices/", pattern = "EVI", full.names = TRUE))
+nirv <- rast(list.files(path = "data/work/reference/indices/", pattern = "NIRv", full.names = TRUE))
 
 # Load reference period LAI data (long-term averages)
-lai <- rast(list.files(path = "data/work/reference/lai/qa1/p10y/", pattern = "LAI", full.names = TRUE))
+lai <- rast(list.files(path = "data/work/reference/lai/p13y/", pattern = "LAI", full.names = TRUE))
 
 # Load forest type mask with 66% coverage threshold
 mask <- rast("data/work/mask/mask_66p.tif")
@@ -121,7 +121,7 @@ nirv_2017 <- rast(list.files(path = path, pattern = "NIRv_2017", full.names = TR
 # 07 LOAD STUDY PERIOD LAI DATA -------------------------------------------
 
 # Set path to study period LAI data
-path <- "data/work/study/lai/qa1/p1m/"
+path <- "data/work/study/lai/"
 
 # Load LAI data for each year (2013-2017)
 lai_2013 <- rast(list.files(path = path, pattern = "LAI_2013", full.names = TRUE))
@@ -295,12 +295,18 @@ keep(df_dif_abs_reg,
      sure = TRUE)
 
 # Save regional difference dataframes in wide format
-save(df_dif_abs_reg, file = "data/work/dataframes/df_dif_absolute_regional.RData")
-save(df_dif_rel_reg, file = "data/work/dataframes/df_dif_relative_regional.RData")
+dir_df <- "data/work/dataframes/"
+dir_xlsx <- "output/"
 
-write_xlsx(df_dif_abs_reg, path = "output/differences_absolute_regional.xlsx")
-write_xlsx(df_dif_rel_reg, path = "output/differences_relative_regional.xlsx")
+dir.create("data/work/dataframes/", recursive = TRUE, showWarnings = FALSE)
+dir.create("output/",               recursive = TRUE, showWarnings = FALSE)
+
+save(df_dif_abs_reg, file = file.path(dir_df, "df_dif_absolute_regional.RData"))
+save(df_dif_rel_reg, file = file.path (dir_df, "df_dif_relative_regional.RData"))
+
+write_xlsx(df_dif_abs_reg, path = file.path(dir_xlsx, "differences_absolute_regional.xlsx"))
+write_xlsx(df_dif_rel_reg, path = file.path(dir_xlsx, "differences_relative_regional.xlsx"))
  
 # Save regional difference dataframes in long format (for visualization)
-save(df_dif_abs_reg_long, file = "data/work/dataframes/df_dif_absolute_regional_long.RData")
-save(df_dif_rel_reg_long, file = "data/work/dataframes/df_dif_relative_regional_long.RData")
+save(df_dif_abs_reg_long, file = file.path(dir_df, "df_dif_absolute_regional_long.RData"))
+save(df_dif_rel_reg_long, file = file.path(dir_df, "df_dif_relative_regional_long.RData"))
