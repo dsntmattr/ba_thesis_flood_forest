@@ -42,7 +42,7 @@ paths_evi  <- list.files(path = path, pattern = "EVI_",  full.names = TRUE)
 paths_nirv <- list.files(path = path, pattern = "NIRv_", full.names = TRUE)
 
 # Get LAI reference data path (Note: using P13Y from original script)
-paths_lai <- list.files(path = "data/work/reference/lai/qa1/P10Y", pattern = "LAI", full.names = TRUE)
+paths_lai <- list.files(path = "data/work/reference/lai/p13y/", pattern = "LAI", full.names = TRUE)
 
 # 03 CREATE REFERENCE PERIOD DATA CUBES -----------------------------------
 
@@ -106,7 +106,7 @@ paths_evi  <- list.files(path = path, pattern = "EVI_",  full.names = TRUE)
 paths_nirv <- list.files(path = path, pattern = "NIRv_", full.names = TRUE)
 
 # Get LAI study data path
-paths_lai <- list.files(path = "data/work/study/lai/qa1/P1M", pattern = "LAI", full.names = TRUE)
+paths_lai <- list.files(path = "data/work/study/lai/", pattern = "LAI", full.names = TRUE)
 
 # 07 CREATE STUDY PERIOD DATA CUBES ---------------------------------------
 
@@ -251,14 +251,21 @@ keep(df_dif_abs_loc,
 # 17 SAVE OUTPUT DATAFRAMES -----------------------------------------------
 
 # Save wide format dataframes
-save(df_dif_abs_loc, file = "data/work/dataframes/df_dif_absolute_local.RData")
-save(df_dif_rel_loc, file = "data/work/dataframes/df_dif_relative_local.RData")
 
-write_xlsx(df_dif_abs_loc, path = "output/differences_absolute_local.xlsx")
-write_xlsx(df_dif_rel_loc, path = "output/differences_relative_local.xlsx")
+dir_df   <- "data/work/dataframes/"
+dir_xlsx <- "output/"
 
-# Save long format dataframes
-save(df_dif_abs_loc_long, file = "data/work/dataframes/df_dif_absolute_local_long.RData")
-save(df_dif_rel_loc_long, file = "data/work/dataframes/df_dif_relative_local_long.RData")
+dir.create(dir_df,   recursive = TRUE, showWarnings = FALSE)
+dir.create(dir_xlsx, recursive = TRUE, showWarnings = FALSE)
+
+save(df_dif_abs_loc, file = file.path(dir_df, "df_dif_absolute_local.RData"))
+save(df_dif_rel_loc, file = file.path(dir_df, "df_dif_relative_local.RData"))
+
+write_xlsx(df_dif_abs_loc, path = file.path(dir_xlsx, "differences_absolute_local.xlsx"))
+write_xlsx(df_dif_rel_loc, path = file.path(dir_xlsx, "differences_relative_local.xlsx"))
+
+# Save long format dataframes (for ggplot2)
+save(df_dif_abs_loc_long, file = file.path(dir_df, "df_dif_absolute_local_long.RData"))
+save(df_dif_rel_loc_long, file = file.path(dir_df, "df_dif_relative_local_long.RData"))
 
 
