@@ -225,17 +225,7 @@ create_mask = function(data, threshold) {
 }
 
 # Create masks with different coverage thresholds
-mask_30p <- create_mask(cov_all, 0.3)                       # 30% coverage threshold
-mask_50p <- create_mask(cov_all, 0.5)                       # 50% coverage threshold
 mask_66p <- create_mask(cov_all, 0.66)                      # 66% coverage threshold
-mask_70p <- create_mask(cov_all, 0.7)                       # 70% coverage threshold
-mask_90p <- create_mask(cov_all, 0.9)                       # 90% coverage threshold
-mask_99p <- create_mask(cov_all, 0.99)                      # 99% coverage threshold
 
 # Save all mask layers as GeoTIFF files
-writeRaster(mask_30p, "data/work/mask/mask_30p.tif")
-writeRaster(mask_50p, "data/work/mask/mask_50p.tif")
-writeRaster(mask_70p, "data/work/mask/mask_70p.tif")
 writeRaster(mask_66p, "data/work/mask/mask_66p.tif")
-writeRaster(mask_90p, "data/work/mask/mask_90p.tif")
-writeRaster(mask_99p, "data/work/mask/mask_99p.tif")
