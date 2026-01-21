@@ -205,16 +205,10 @@ project/
 - **Data Access**:  
   - `rstac` (v1.0.1)
 
-- **Data Manipulation**:  
+- **Data Manipulation and Visualization**:  
   - `tidyverse` (v2.0.0)  
-  - `dplyr` (v1.1.4)  
-  - `tidyr` (v1.3.1)  
   - `magrittr` (v2.0.3)  
   - `gdata` (v3.0.1)
-
-- **Visualization**:  
-  - `ggplot2` (v3.5.1)  
-  - `lubridate` (v1.9.4)
 
 - **Output**:  
   - `writexl` (v1.5.4)
