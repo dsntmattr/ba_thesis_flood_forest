@@ -12,9 +12,8 @@
 library(terra)       # Spatial raster data analysis
 
 # Data manipulation and output
-library(dplyr)       # Data manipulation and transformation
 library(gdata)       # Additional data manipulation tools
-library(tidyr)       # Data tidying and reshaping
+library(tidyverse)   # Data manipulation & plotting
 library(writexl)     # Write Excel files
 
 # ==============================================================================
@@ -288,11 +287,11 @@ df_dif_rel_reg_long <- df_dif_rel_reg %>%
 # 13 CLEAN ENVIRONMENT AND SAVE RESULTS -----------------------------------
 
 # Keep only final result dataframes in environment
-keep(df_dif_abs_reg,
-     df_dif_rel_reg,
-     df_dif_abs_reg_long, 
-     df_dif_rel_reg_long, 
-     sure = TRUE)
+gdata::keep(df_dif_abs_reg,
+            df_dif_rel_reg,
+            df_dif_abs_reg_long, 
+            df_dif_rel_reg_long, 
+            sure = TRUE)
 
 # Save regional difference dataframes in wide format
 dir_df <- "data/work/dataframes/"

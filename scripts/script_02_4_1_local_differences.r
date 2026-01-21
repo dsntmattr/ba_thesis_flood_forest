@@ -14,9 +14,8 @@ library(sf)          # Simple features for vector data
 library(terra)       # Spatial raster data analysis
 
 # Data manipulation and output
-library(dplyr)       # Data manipulation and transformation
 library(gdata)       # Additional data manipulation tools
-library(tidyr)       # Data tidying and reshaping
+library(tidyverse)   # # Data manipulation & plotting
 library(writexl)     # Write Excel files
 
 # 01 LOAD AND PREPARE VECTOR DATA -----------------------------------------
@@ -242,11 +241,11 @@ df_dif_rel_loc_long <- df_dif_rel_loc %>%
 # 16 CLEAN ENVIRONMENT ----------------------------------------------------
 
 # Keep only the final output dataframes
-keep(df_dif_abs_loc,
-     df_dif_rel_loc,
-     df_dif_abs_loc_long, 
-     df_dif_rel_loc_long, 
-     sure = TRUE)
+gdata::keep(df_dif_abs_loc,
+            df_dif_rel_loc,
+            df_dif_abs_loc_long, 
+            df_dif_rel_loc_long, 
+            sure = TRUE)
 
 # 17 SAVE OUTPUT DATAFRAMES -----------------------------------------------
 

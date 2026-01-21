@@ -7,13 +7,7 @@
 # ==============================================================================
 
 # 00 LOAD REQUIRED PACKAGES -----------------------------------------------
-
-# Visualization packages
-library(lubridate)   # Date and time manipulation
-library(ggplot2)     # Grammar of graphics plotting system
-
-# Data manipulation
-library(dplyr)       # Data manipulation and transformation
+library(tidyverse)   # Data manipulation & plotting
 
 # 01 SET GLOBAL PLOT PARAMETERS -------------------------------------------
 
