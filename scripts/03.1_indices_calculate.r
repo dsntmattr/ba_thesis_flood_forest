@@ -3,7 +3,7 @@
 # PURPOSE: Calculate NDVI, EVI, and NIRv from MODIS reflectance data
 #          for both reference and study periods
 # AUTHOR: Matthias Lerch
-# DATE: [Current Date]
+# DATE: [25.01.2026]
 # ==============================================================================
 
 # 00 LOAD REQUIRED PACKAGES -----------------------------------------------

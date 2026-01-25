@@ -3,7 +3,7 @@
 # PURPOSE: Analyze the remaining forest area and pixel counts after applying
 #          different coverage threshold masks
 # AUTHOR: Matthias Lerch
-# DATE: [Current Date]
+# DATE: [25.01.2026]
 # ==============================================================================
 
 # 00 LOAD REQUIRED PACKAGES -----------------------------------------------

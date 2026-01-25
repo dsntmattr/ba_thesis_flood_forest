@@ -3,7 +3,7 @@
 # PURPOSE: Aggregate monthly MODIS NBAR and LAI data from reference period
 #          to create long-term monthly averages (P13Y = 13-year period)
 # AUTHOR: Matthias Lerch
-# DATE: [Current Date]
+# DATE: [25.01.2026]
 # ==============================================================================
 
 # 00 LOAD REQUIRED PACKAGES -----------------------------------------------

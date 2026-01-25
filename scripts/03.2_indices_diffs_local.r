@@ -3,7 +3,7 @@
 # PURPOSE: Create dataframes with time series values comparing study period
 #          to reference period at local forest loss sites
 # AUTHOR: Matthias Lerch
-# DATE: [Current Date]
+# DATE: [25.01.2026]
 # ==============================================================================
 
 # 00 LOAD REQUIRED PACKAGES -----------------------------------------------

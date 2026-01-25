@@ -3,7 +3,7 @@
 # PURPOSE: Intersect floodplains with forest areas and create coverage masks
 #          with different thresholds for remote sensing analysis
 # AUTHOR: Matthias Lerch
-# DATE: [Current Date]
+# DATE: [25.01.2026]
 # ==============================================================================
 
 # 00 LOAD REQUIRED PACKAGES -----------------------------------------------

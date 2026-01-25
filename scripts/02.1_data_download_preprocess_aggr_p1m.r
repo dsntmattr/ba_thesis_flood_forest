@@ -3,7 +3,7 @@
 # PURPOSE: Download MODIS NBAR and LAI data, aggregate to monthly composites,
 #          and rescale values for analysis
 # AUTHOR: Matthias Lerch
-# DATE: [Current Date]
+# DATE: [25.01.2026]
 # ==============================================================================
 
 # PART 01: MODIS Nadir BRDF-Adjusted Reflectance (NBAR) Daily
