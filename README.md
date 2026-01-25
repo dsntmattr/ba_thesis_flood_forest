@@ -25,14 +25,14 @@ The analysis follows a sequential workflow divided into four main phases:
 
 ### Phase 1: Data Preparation
 
-#### `script_01_1.r` - Create Area of Interest and Forest Masks
+#### `01.1_flood_forest_masks.r` - Create Area of Interest and Forest Masks
 **Purpose**: Intersect floodplains with forest areas and create coverage masks with different thresholds
 
 **Key Functions**:
 - Intersects floodplains with forest vegetation data
 - Creates base grid from MODIS data for spatial reference
 - Calculates forest type coverage percentages per grid cell
-- Generates binary masks with various coverage thresholds (30%, 50%, 66%, 70%, 90%, 99%)
+- Generates binary masks with coverage threshold 66%
 
 **Inputs**:
 - `data/raw/floodplains/FLUT_LK.shp` - Floodplain boundaries
@@ -42,27 +42,27 @@ The analysis follows a sequential workflow divided into four main phases:
 - `data/work/flood_forest.shp` - Intersection of floodplains and forests
 - `data/work/bbox.vector.RData` - Bounding box for study area
 - `data/work/coverage.tif` - Forest coverage percentages
-- `data/work/mask_*.tif` - Binary masks for different thresholds
+- `data/work/mask_66p*.tif` - Binary masks for different thresholds
 
-#### `script_01_2.r` - Calculate Remaining Area Percentages and Pixel Counts
-**Purpose**: Analyze remaining forest area and pixel counts after applying coverage threshold masks
+#### `01.2_mask_test.r` - Calculate Remaining Area Percentages and Pixel Counts
+**Purpose**: Analyze remaining forest area and pixel counts after applying coverage threshold mask
 
 **Key Functions**:
-- Applies different threshold masks to coverage layers
+- Applies  threshold mask to coverage layers
 - Calculates total forest areas in hectares for each forest type
 - Computes relative areas as percentages of total area
-- Counts valid pixels for each mask and forest type
+- Counts valid pixels for mask and forest type
 
 **Inputs**:
 - `data/work/coverage.tif` - Forest coverage layers
-- `data/work/mask_*.tif` - Threshold mask files
+- `data/work/mask_66p*.tif` - Threshold mask files
 
 **Outputs**:
-- `data/final/remaining_area_and_pixels.xlsx` - Summary statistics in Excel format
+- `output/mask_result.xlsx` - Summary statistics in Excel format
 
 ### Phase 2: Data Download & Processing
 
-#### `script_02_1.r` - Download, Aggregate and Rescale MODIS Data
+#### `02.1_data_download_preprocess_aggr_p1m.r` - Download, Aggregate and Rescale MODIS Data
 **Purpose**: Download MODIS NBAR and LAI data, aggregate to monthly composites, and rescale values
 
 **Key Functions**:
@@ -76,12 +76,12 @@ The analysis follows a sequential workflow divided into four main phases:
 - Study: 2013-2017
 
 **Outputs**:
-- `data/work/reference/P1M/MODIS_*.tif` - Monthly reference period NBAR data
-- `data/work/study/P1M/MODIS_*.tif` - Monthly study period NBAR data
-- `data/work/reference/lai/no_qa/p1m/LAI_*.tif` - Monthly reference LAI data
-- `data/work/study/lai/no_qa/p1m/LAI_*.tif` - Monthly study LAI data
+- `data/work/reference/nbar/p1m/NBAR_*.tif` - Monthly reference period NBAR data
+- `data/work/study/nbar/NBAR_*.tif` - Monthly study period NBAR data
+- `data/work/reference/lai/p1m/LAI_*.tif` - Monthly reference LAI data
+- `data/work/study/lai//LAI_*.tif` - Monthly study LAI data
 
-#### `script_02_2.r` - Aggregate Reference Period Data
+#### `02.2_data_reference_aggr_p13y.r` - Aggregate Reference Period Data
 **Purpose**: Aggregate monthly MODIS data to create long-term monthly averages (P13Y = 13-year period, P10Y = 10-year period)
 
 **Key Functions**:
@@ -90,12 +90,12 @@ The analysis follows a sequential workflow divided into four main phases:
 - Processes both NBAR and LAI data separately
 
 **Outputs**:
-- `data/work/reference/P13Y/MODIS_*.tif` - Long-term monthly NBAR averages
-- `data/work/reference/lai/no_qa/p13y/LAI_*.tif` - Long-term monthly LAI averages
+- `data/work/reference/nbar/p13y/NBAR_*.tif` - Long-term monthly NBAR averages
+- `data/work/reference/lai/p13y/LAI_*.tif` - Long-term monthly LAI averages
 
 ### Phase 3: Index Calculation
 
-#### `script_02_3.r` - Calculate Vegetation Indices
+#### `03.1_indices_calculate.r` - Calculate Vegetation Indices
 **Purpose**: Calculate NDVI, EVI, and NIRv from MODIS reflectance data for both periods
 
 **Key Functions**:
@@ -111,7 +111,7 @@ The analysis follows a sequential workflow divided into four main phases:
 
 ### Phase 4: Analysis & Visualization
 
-#### `script_02_4_1.r` - Calculate Mean Differences - Local Level Analysis
+#### `03.2_indices_diffs_local.r` - Calculate Mean Differences - Local Level Analysis
 **Purpose**: Create time series dataframes comparing study period to reference period at forest loss sites
 
 **Key Functions**:
@@ -124,9 +124,15 @@ The analysis follows a sequential workflow divided into four main phases:
 - Reference and study period vegetation indices and LAI data
 
 **Outputs**:
-- Time series dataframes for local analysis (both wide and long format)
+- `data/work/dataframes/df_dif_absolute_local.RData` - Absolute differences (wide format)
+- `data/work/dataframes/df_dif_relative_local.RData` - Relative differences (wide format)
+- `data/work/dataframes/df_dif_absolute_local_long.RData` - Absolute differences (long format)
+- `data/work/dataframes/df_dif_relative_local_long.RData` - Relative differences (long format)
 
-#### `script_02_4_2.r` - Calculate Mean Differences - Regional Level Analysis
+- `data/output/differences_absolute_local.xlsx` - Absolute differences (Excel format)
+- `data/output/differences_relative_local.xlsx` - Relative differences (Excel format)
+
+#### `03.2_indices_diffs_regional.r` - Calculate Mean Differences - Regional Level Analysis
 **Purpose**: Create time series dataframes comparing study period to reference period at regional level using forest type masks
 
 **Key Functions**:
@@ -141,7 +147,10 @@ The analysis follows a sequential workflow divided into four main phases:
 - `data/work/dataframes/df_dif_absolute_regional_long.RData` - Absolute differences (long format)
 - `data/work/dataframes/df_dif_relative_regional_long.RData` - Relative differences (long format)
 
-#### `script_04_1.r` - Create Time Series Visualization Plots
+- `data/output/differences_absolute_regional.xlsx` - Absolute differences (Excel format)
+- `data/output/differences_relative_regional.xlsx` - Relative differences (Excel format)
+
+#### `04.1_plots.r` - Create Time Series Visualization Plots
 **Purpose**: Generate standardized time series plots for local and regional analysis results
 
 **Key Functions**:
@@ -157,35 +166,14 @@ The analysis follows a sequential workflow divided into four main phases:
 - Forest type-specific plots (broadleaf vs. coniferous)
 
 **Outputs**:
-- `output/local_qa1.png` - Local site time series
-- `output/regional_qa1.png` - Regional overview
-- `output/regional_*_qa1.png` - Index and forest type specific plots
-
-## Directory Structure
-
-```
-project/
-├── data/
-│   ├── raw/                          # Original input data
-│   │   ├── floodplains/             # Floodplain shapefiles
-│   │   ├── dlm_st_veg02_f/          # Forest vegetation data
-│   │   └── forest_loss/             # Forest loss polygons
-│   ├── work/                        # Intermediate processing files
-│   │   ├── reference/               # Reference period data (2000-2012)
-│   │   │   ├── P1M/                # Monthly data
-│   │   │   ├── P13Y/               # Long-term averages
-│   │   │   ├── indices/            # Vegetation indices
-│   │   │   └── lai/                # LAI data
-│   │   ├── study/                  # Study period data (2013-2017)
-│   │   │   ├── P1M/                # Monthly data
-│   │   │   ├── indices/            # Vegetation indices
-│   │   │   └── lai/                # LAI data
-│   │   ├── mask/                   # Coverage and mask files
-│   │   └── dataframes/             # Analysis result dataframes
-│   └── final/                      # Final results
-└── output/                         # Visualization outputs
-```
-
+- `output/plots/plot_local_all.pdf` - Local site time series
+- `output/plots/plot_regional_all.pdf` - Regional overview
+`output/plots/plot_regional_broad.pdf` - Regional index comparison in broadleaf forest
+`output/plots/plot_regional_conifer.pdf`- Regional index comparison in conifer forest
+`output/plots/plot_regional_evi.pdf` - Regional evi comparison in broadleaf and conifer forest
+`output/plots/plot_regional_lai.pdf` - Regional lai comparison in broadleaf and conifer forest
+`output/plots/plot_regional_ndi.pdf` - Regional ndvi comparison in broadleaf and conifer forest
+`output/plots/plot_regional_nriv.pdf` - Regional nirv comparison in broadleaf and conifer forest
 
 ## Requirements
 
@@ -220,12 +208,12 @@ project/
 ## Usage Instructions
 
 1. **Setup**: Ensure all required R packages are installed
-2. **Data Preparation**: Run scripts 01_1 and 01_2 to create study area and masks
-3. **Data Download**: Execute script 02_1 to download MODIS data
-4. **Data Aggregation**: Run script 02_2 to create reference period averages
-5. **Index Calculation**: Execute script 02_3 to calculate vegetation indices
-6. **Analysis**: Run scripts 02_4_1 and 02_4_2 for local and regional analysis
-7. **Visualization**: Execute script 04_1 to generate time series plots
+2. **Data Preparation**: Run scripts 01.1_flood_forest_masks and 01.2_mask_test to create study area and masks
+3. **Data Download**: Execute script 02.1_data_download_preprocess_aggr_p1m to download MODIS data
+4. **Data Aggregation**: Run script 02.2_data_reference_aggr_p13y to create reference period averages
+5. **Index Calculation**: Execute script 03.1_indices_calculate to calculate vegetation indices
+6. **Analysis**: Run scripts 03.2_indices_diffs_local and 03.2_indices_diffs_regional for local and regional analysis
+7. **Visualization**: Execute script 04.1_plots to generate time series plots
 
 ## Key Parameters
 
@@ -234,6 +222,7 @@ project/
 - **Study Period**: 2013-2017
 - **Growing Season**: May-September (months 5-9)
 - **Spatial Resolution**: 500m (MODIS native resolution)
+- **Aggregation Method**: Mean
 - **Forest Types**: Broadleaf (VEG=1100), Coniferous (VEG=1200), Mixed (VEG=1300)
 - **Coverage Threshold**: 66% for main analysis
 
@@ -242,4 +231,4 @@ project/
 - Scripts should be run in numerical order due to data dependencies
 - Processing times vary depending on study area size and internet connection
 - Intermediate files are saved to enable resuming analysis at any step
-- Quality flags (QA1) are applied to LAI data for improved accuracy
+- Quality flag ("FparLai_QC") is applied to LAI data for improved accuracy
